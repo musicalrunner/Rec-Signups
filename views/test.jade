@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  h1 #{title}
+  .camper
+    | #{aCamper.name[0].firstName} #{aCamper.name[0].lastName}
+    br
+    | #{aCamper.cabin}
+    br
+    | Recs:
+    br
+    - for(var i = 0; i < aCamper.recs.length; i++)
+      | #{aCamper.recs[i].name}
+      br
+  br
+  .rec
+    | #{aRec.name}
+    br
+    | Campers:
+    br
+    - for(var i = 0; i < aRec.people.length; i++)
+      | #{aRec.people[i].firstName} #{aRec.people[i].lastName}
+      br
