@@ -5,6 +5,13 @@ var db = mongoose.connect('mongodb://localhost:27017/recsignups');
 var Schema = mongoose.Schema;
 
 // Schemas
+//
+// Validation (enums)
+
+var recBlocks = 'first second double'.split(' ');
+var cabins = 'Dorr.Smith.Sault.Burns.Towne.Wade.Up Dorm.Down Dorm'.split('.');
+
+//
 // Invariant : for each rec in camper.rec, rec.campers must contain camper.name
 
 var Person = new Schema( {
@@ -15,14 +22,14 @@ var Person = new Schema( {
 var Rec = new Schema( {
   name : String,
   capacity : Number,
-  recBlock : String,
+  recBlock : { type : String, enum : recBlocks },
   people : [Person],
 });
 
 var Camper = new Schema( {
   name : [Person],
   recs : [Rec],
-  cabin : String,
+  cabin : { type : String, enum : cabins},
 });
 
 /*
@@ -60,7 +67,7 @@ exports.test = function(req, res){
   var rec = new RecModel();
   rec.name = 'Phys Fit';
   rec.capacity = 25;
-  rec.recBlock = 'First';
+  rec.recBlock = 'first';
   rec.people.push(dude);
 
   var camper = new CamperModel();
