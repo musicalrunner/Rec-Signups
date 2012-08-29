@@ -117,3 +117,40 @@ exports.test = function(req, res){
     aRec : rec, 
   });
 };
+
+exports.setup = function(req, res) {
+  console.log('getting setup');
+  res.render('setup', { title : 'Setup' });
+  console.log('got setup');
+};
+
+exports.addCamper = function(req, res) {
+  res.render('addCamper', { 
+    title : 'Add Camper', 
+    cabins : (new CamperModel()).schema.path('cabin').enumValues,
+  });
+};
+
+exports.addingCamper = function(req, res) {
+  var firstName = req.param('firstName');
+  var lastName = req.param('lastName');
+  var cabin = req.param('cabin');
+  console.log('here');
+
+  var dude = new PersonModel();
+  dude.firstName = firstName;
+  dude.lastName = lastName;
+
+  var camperDude = new CamperModel();
+  camperDude.name.push(dude);
+  camperDude.cabin = cabin;
+
+  camperDude.save( function(err) {
+    if (err) { throw err; }
+    console.log('Camper saved');
+  });
+  res.render('addCamper', { 
+    title : 'Add Camper', 
+    cabins : (new CamperModel()).schema.path('cabin').enumValues,
+  });
+};

@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  script(src='/javascripts/addCamper.js')
+  h1 Add Camper
+
+  #add Enter the camper's info:
+    form(name='addCamper', id='addCamperForm')
+      label(for='firstName') First Name:
+      input(name='firstName', type='text', id='firstNameInput')
+      br
+      label(for='lastName') Last Name:
+      input(name='lastName', type='text', id='lastNameINput')
+      br
+      label(for='cabin') Cabin:
+      select(name='cabin')
+        - for(var i = 0; i < cabins.length; i++)
+          option(value=cabins[i]) #{cabins[i]}
+
+    span.button#submit Add
