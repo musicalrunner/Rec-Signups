@@ -1,26 +1,34 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  padding : 50px;
+  font : 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
-  color: #00B7FF;
+  color : #00B7FF;
+  text-decoration : none;
 }
 
-.camper {
+form {
+  margin : 16px;
+}
+
+.button, .camper, .rec {
   border : solid;
   border-radius : 8px;
   background-color : #DDF1FF;
-  max-width : 100px;
   padding : 8px;
   margin : 8px;
 }
 
-.rec {
-  border : solid;
-  border-radius : 8px;
-  background-color : #DDF1FF;
+.button:hover {
+  background-color : orange;
+  /*cursor : pointer;*/
+}
+
+.button {
+  color : black;
+}
+
+.camper, .rec {
   max-width : 100px;
-  padding : 8px;
-  margin : 8px;
 }
