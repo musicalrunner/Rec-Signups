@@ -31,6 +31,8 @@ app.get('/test', routes.test);
 app.get('/setup', routes.setup);
 app.get('/setup/addCamper', routes.addCamper);
 app.post('/setup/addingCamper', routes.addingCamper);
+app.get('/setup/addRec', routes.addRec);
+app.post('/setup/addingRec', routes.addingRec);
 
 
 http.createServer(app).listen(app.get('port'), function(){

@@ -154,3 +154,30 @@ exports.addingCamper = function(req, res) {
     cabins : (new CamperModel()).schema.path('cabin').enumValues,
   });
 };
+
+exports.addRec = function(req, res) {
+  res.render('addRec', {
+    title : 'Add Rec',
+    recBlocks : (new RecModel()).schema.path('recBlock').enumValues,
+  });
+};
+
+exports.addingRec = function(req, res) {
+  var recName = req.param('name');
+  var recCapacity = req.param('capacity');
+  var recRecBlock = req.param('recBlock');
+
+  var rec = new RecModel();
+  rec.name = recName;
+  rec.capacity = recCapacity;
+  rec.recBlcok = recRecBlock;
+
+  rec.save( function(err) {
+    if (err) { throw err; }
+    console.log('Rec saved');
+  });
+  res.render('addRec', {
+    title : 'Add Rec',
+    recBlocks : (new RecModel()).schema.path('recBlock').enumValues,
+  });
+};

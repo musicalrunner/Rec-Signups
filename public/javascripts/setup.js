@@ -1,7 +1,7 @@
 $('document').ready(function() {
 
   console.log('here');
-  $addCamperButton = $('#addCamper');
-  $addCamperButton.wrap('<a href="/setup/addCamper"/>');
+  $('#addCamper').wrap('<a href="/setup/addCamper" />');
+  $('#addRec').wrap('<a href="/setup/addRec" />');
 
 });

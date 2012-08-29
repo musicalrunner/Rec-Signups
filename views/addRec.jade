@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  script(src='/javascripts/addRec.js')
+  h1 Add Rec
+
+  #add Enter the rec's info:
+    form(name='addRec', id='addRecForm')
+      label(for='name') Name:
+      input(name='name', type='text', id='nameInput')
+      br
+      label(for='capacity') Capacity:
+      input(name='capacity', type='text', id='capacityInput')
+      br
+      label(for='recBlock') Rec Block:
+      select(name='recBlock')
+        - for(var i = 0; i < recBlocks.length; i++)
+          option(value=recBlocks[i]) #{recBlocks[i]}
+
+    span.button#submit Add
