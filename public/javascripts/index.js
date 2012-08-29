@@ -1,6 +1,6 @@
 $('document').ready(function() {
 
-  $setupButton = $('#setup');
-  $setupButton.wrap('<a href="/setup"/>');
+  $('#setup').wrap('<a href="/setup" />');
+  $('#go').wrap('<a href="/assign" />');
 
 });

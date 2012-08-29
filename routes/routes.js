@@ -135,7 +135,6 @@ exports.addingCamper = function(req, res) {
   var firstName = req.param('firstName');
   var lastName = req.param('lastName');
   var cabin = req.param('cabin');
-  console.log('here');
 
   var dude = new PersonModel();
   dude.firstName = firstName;
@@ -178,6 +177,13 @@ exports.addingRec = function(req, res) {
   });
   res.render('addRec', {
     title : 'Add Rec',
+    recBlocks : (new RecModel()).schema.path('recBlock').enumValues,
+  });
+};
+
+exports.assign = function(req, res) {
+  res.render('assign', {
+    title : 'Assign Recs',
     recBlocks : (new RecModel()).schema.path('recBlock').enumValues,
   });
 };
