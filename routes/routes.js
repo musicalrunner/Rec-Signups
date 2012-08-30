@@ -22,6 +22,7 @@ var Person = new Schema( {
 var Rec = new Schema( {
   name : String,
   capacity : Number,
+  week : Number,
   recBlock : { type : String, enum : recBlocks },
   people : [Person],
 });
@@ -182,8 +183,74 @@ exports.addingRec = function(req, res) {
 };
 
 exports.assign = function(req, res) {
-  res.render('assign', {
-    title : 'Assign Recs',
-    recBlocks : (new RecModel()).schema.path('recBlock').enumValues,
+  // Get the Campers
+  CamperModel.find().select('name cabin').exec(function(err) {
+    if (err) { throw err; }
+
+    var campersByCabin = getCampersByCabin(this);
+
+    // Get the recs
+    RecModel.find().select('name recBlock').exec(function(err) {
+      if (err) { throw err; }
+    
+      var recsByRecBlock = getRecsByRecBlock(this);
+
+      // Render the page
+      res.render('assign', {
+        title : 'Assign Recs',
+        recBlocks : (new RecModel()).schema.path('recBlock').enumValues,
+        cabins : (new CamperModel()).schema.path('cabin').enumValues,
+        campers : campersByCabin,
+        recs : recsByRecBlock,
+      });
+    });
   });
+};
+
+
+
+
+var getCampersByCabin = function(resultOfQuery) {
+  var people = resultOfQuery['emitted']['complete'][0];
+  var campersByCabin = {};
+  var cabins = (new CamperModel()).schema.path('cabin').enumValues;
+
+  for(var i = 0; i < cabins.length; i++)
+  {
+    campersByCabin[cabins[i]] = new Array();
+  }
+
+  for(var i = 0; i < people.length; i++)
+  {
+    var firstName = people[i]['name'][0]['firstName'];
+    var lastName = people[i]['name'][0]['lastName'];
+    var name = firstName + ' ' + lastName;
+    var cabin = people[i]['cabin'];
+    campersByCabin[cabin].push(name);
+  }
+  return campersByCabin;
+};
+
+var getRecsByRecBlock = function(resultOfQuery) {
+  var recs = resultOfQuery['emitted']['complete'][0];
+  console.log('recs = ' + recs);
+  var recsByRecBlock = {};
+  var recBlocks= (new RecModel()).schema.path('recBlock').enumValues;
+  console.log('recBlocks = ' + recBlocks);
+  console.log('recBlocks.length = ' + recBlocks.length);
+
+  for(var i = 0; i < recBlocks.length; i++)
+  {
+    recsByRecBlock[recBlocks[i]] = new Array();
+  }
+
+  for(var i = 0; i < recs.length; i++)
+  {
+    var name = recs[i]['name'];
+    console.log('name = ' + name);
+    var recBlock = recs[i]['recBlock'];
+    console.log('recBlock = ' + recBlock);
+    recsByRecBlock[recBlock].push(name);
+  }
+  return recsByRecBlock;
 };

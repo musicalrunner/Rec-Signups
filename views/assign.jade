@@ -1,8 +1,30 @@
 extends layout
 
 block content
+  script(src = '/javascripts/assign.js')
   h1 #{title}
   h3 Click on the rec period to assign
-  span.button#first first
-  span.button#second second
-  span.button#double double
+
+  // The rec block buttons
+  - for(var i = 0; i < recBlocks.length; i++)
+    span.button.recBlock(id= recBlocks[i]) #{recBlocks[i]}
+
+  // The cabin buttons
+  - for(var i = 0; i < cabins.length; i++)
+    span.button.cabin(id= cabins[i]) #{cabins[i]}
+
+  // The camper buttons
+  - for(cabin in campers)
+    - for(var i = 0; i < campers[cabin].length; i++)
+      span.button.camper(class= cabin) #{campers[cabin][i]}
+
+  // The rec buttons
+  - for(recBlock in recs)
+   - for(var i = 0; i < recs[recBlock].length; i++)
+     span.button.rec(class= recBlock) #{recs[recBlock][i]}
+
+
+  //
+    span.button.recBlock#first first
+    span.button.recBlock#second second
+    span.button.recBlock#double double
