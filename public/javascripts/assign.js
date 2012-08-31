@@ -9,12 +9,14 @@ $('document').ready(function() {
   var $allRecButtons = $('.button.rec');
   var $recButtons = {};
 
+  // Set up camper buttons by cabin
   for(var i = 0; i < $cabinButtons.length; i++)
   {
     var cabin = $($cabinButtons[i]).attr('id');
     $camperButtons[cabin] = $('.button.camper.' + cabin.replace(' ', '.'));
   }
 
+  // Set up rec buttons by rec block
   for(var i = 0; i < $recBlockButtons.length; i++)
   {
     var recBlock = $($recBlockButtons[i]).attr('id');
@@ -25,6 +27,7 @@ $('document').ready(function() {
   $buttons.click(function() {
     console.log('clicked');
   });
+
 
   // Detach the cabin, camper and rec buttons from the current view
   $cabinButtons.detach();
@@ -49,6 +52,12 @@ $('document').ready(function() {
     camperClicked(camper);
   });
 
+  // Add click handler to rec buttons--includes wrapping in <form />
+  $allRecButtons.click(function() {
+    recClicked(this);
+  }); 
+
+
 // Functions
 
 // Click handler for rec block buttons
@@ -71,8 +80,32 @@ var camperClicked = function(camper) {
   recAssignment['camper'] = camper;
   $allCamperButtons.detach();
   $recButtons[recAssignment['recBlock']].appendTo('body');
+  $recButtons[recAssignment['recBlock']].wrap(function(index) {
+    var toReturn = '<form method="POST" id="';
+    toReturn += $(this).html().replace(' ', '-') + '-form"/>';
+    return toReturn;
+  });
 };
 
+var recClicked = function(button) {
+  $allRecButtons.detach();
+  var rec = $(button).html();
+  recAssignment['rec'] = rec;
+  var $form = $('#' + rec.replace(' ', '-') + '-form');
+
+  $form.attr('action', '/assign/submit');
+  for(field in recAssignment)
+  {
+    var value = recAssignment[field];
+    var nValue = value.replace(' ', '-');
+    var nField = field.replace(' ', '-');
+    var inputString = '<input type="text" name="' + nField + '"';
+    inputString += ' id="' + nField + '-input" value="' + nValue + '" />';
+    $form.append(inputString);
+    $('#' + nField + '-input').hide();
+  }
+
+};
 
 });
 

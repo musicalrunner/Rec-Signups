@@ -21,10 +21,4 @@ block content
   // The rec buttons
   - for(recBlock in recs)
    - for(var i = 0; i < recs[recBlock].length; i++)
-     span.button.rec(class= recBlock) #{recs[recBlock][i]}
-
-
-  //
-    span.button.recBlock#first first
-    span.button.recBlock#second second
-    span.button.recBlock#double double
+     span.button.rec(class= recBlock, id=recs[recBlock][i].replace(' ','-')) #{recs[recBlock][i]}

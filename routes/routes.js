@@ -170,7 +170,7 @@ exports.addingRec = function(req, res) {
   var rec = new RecModel();
   rec.name = recName;
   rec.capacity = recCapacity;
-  rec.recBlcok = recRecBlock;
+  rec.recBlock = recRecBlock;
 
   rec.save( function(err) {
     if (err) { throw err; }
