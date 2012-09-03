@@ -145,13 +145,18 @@ exports.addingCamper = function(req, res) {
   camperDude.name.push(dude);
   camperDude.cabin = cabin;
 
+  dude.save( function(err) {
+    if (err) { throw err; }
+    console.log('Person saved');
+  });
+
   camperDude.save( function(err) {
     if (err) { throw err; }
     console.log('Camper saved');
+    res.render('addCamper', { 
+      title : 'Add Camper', 
+      cabins : (new CamperModel()).schema.path('cabin').enumValues,
   });
-  res.render('addCamper', { 
-    title : 'Add Camper', 
-    cabins : (new CamperModel()).schema.path('cabin').enumValues,
   });
 };
 
@@ -207,7 +212,59 @@ exports.assign = function(req, res) {
   });
 };
 
+exports.submitAssignment = function(req, res) {
+  // Get the data
+  var assignment = {};
+  assignment['camperFirstName'] = req.param('camper').split('-')[0];
+  assignment['camperLastName'] = req.param('camper').split('-')[1];
+  assignment['recBlock'] = req.param('recBlock');
+  assignment['recName'] = req.param('rec');
 
+  console.log('assignment = ' + JSON.stringify(assignment));
+
+/*
+  RecModel.findOne( {
+    name : assignment['recName'].replace('-',' '),
+    recBlock : assignment['recBlock'],
+  }, function(err, rec) {
+    if (err) { throw err; }
+    var camperName = new PersonModel();
+    camperName.firstName = assignment['camperFirstName'];
+    camperName.lastName = assignment['camperLastName'];
+    //camper.recs.push(rec);
+    rec.people.push(camperName);
+    rec.save(function() {
+      console.log('saved rec');
+    });
+  });
+
+  */
+  CamperModel.findOne( {
+    "name.firstName" : assignment['camperFirstName'],
+    'name.lastName' : assignment['camperLastName'],
+    }, function(err, camper) {
+      if (err) { throw err; }
+      console.log('found camper ' + JSON.stringify(camper));
+      RecModel.findOne( {
+        name : assignment['recName'].replace('-',' '),
+        recBlock : assignment['recBlock'],
+      }, function(err, rec) {
+        if (err) { throw err; }
+        console.log('found rec ' + JSON.stringify(rec));
+        camper.recs.push(rec);
+        rec.people.push(camper.name[0]);
+        camper.save(function() {console.log('saved camper')});
+        rec.save(function() {console.log('saved rec')});
+        res.render('assign', {
+          title : 'Assign Recs',
+          recBlocks : (new RecModel()).schema.path('recBlock').enumValues,
+          cabins : (new CamperModel()).schema.path('cabin').enumValues,
+          //campers : campersByCabin,
+          //recs : recsByRecBlock,
+        });
+      });
+  });
+};
 
 
 var getCampersByCabin = function(resultOfQuery) {
@@ -254,3 +311,4 @@ var getRecsByRecBlock = function(resultOfQuery) {
   }
   return recsByRecBlock;
 };
+

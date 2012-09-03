@@ -96,6 +96,8 @@ var recClicked = function(button) {
   $form.attr('action', '/assign/submit');
   for(field in recAssignment)
   {
+    console.log('field = ' + field);
+    console.log('recAssignment[field] = ' + recAssignment[field]);
     var value = recAssignment[field];
     var nValue = value.replace(' ', '-');
     var nField = field.replace(' ', '-');
@@ -104,6 +106,8 @@ var recClicked = function(button) {
     $form.append(inputString);
     $('#' + nField + '-input').hide();
   }
+
+  $form.submit();
 
 };
 
