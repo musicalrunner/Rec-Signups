@@ -222,23 +222,6 @@ exports.submitAssignment = function(req, res) {
 
   console.log('assignment = ' + JSON.stringify(assignment));
 
-/*
-  RecModel.findOne( {
-    name : assignment['recName'].replace('-',' '),
-    recBlock : assignment['recBlock'],
-  }, function(err, rec) {
-    if (err) { throw err; }
-    var camperName = new PersonModel();
-    camperName.firstName = assignment['camperFirstName'];
-    camperName.lastName = assignment['camperLastName'];
-    //camper.recs.push(rec);
-    rec.people.push(camperName);
-    rec.save(function() {
-      console.log('saved rec');
-    });
-  });
-
-  */
   CamperModel.findOne( {
     "name.firstName" : assignment['camperFirstName'],
     'name.lastName' : assignment['camperLastName'],
@@ -255,13 +238,9 @@ exports.submitAssignment = function(req, res) {
         rec.people.push(camper.name[0]);
         camper.save(function() {console.log('saved camper')});
         rec.save(function() {console.log('saved rec')});
-        res.render('assign', {
-          title : 'Assign Recs',
-          recBlocks : (new RecModel()).schema.path('recBlock').enumValues,
-          cabins : (new CamperModel()).schema.path('cabin').enumValues,
-          //campers : campersByCabin,
-          //recs : recsByRecBlock,
-        });
+
+        // Call the assign page back
+        exports.assign(req, res);
       });
   });
 };
