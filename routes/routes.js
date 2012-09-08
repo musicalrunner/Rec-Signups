@@ -267,6 +267,27 @@ var getCampersByCabin = function(resultOfQuery) {
   return campersByCabin;
 };
 
+var getCampersByRec = function(resultOfQuery) {
+  var recs = resultOfQuery['emitted']['complete'][0];
+
+  var campersByRec = {};
+
+  for(var i = 0; i < recs.length; i++)
+  {
+    var recName = recs[i]['name'];
+    campersByRec[recName] = new Array();
+    var people = recs[i]['people'];
+    for(var j = 0; j < people.length; j++)
+    {
+      var firstName = people[j]['firstName'];
+      var lastName = people[j]['lastName'];
+      var name = firstName + ' ' + lastName;
+      campersByRec[recName].push(name);
+    }
+  }
+  return campersByRec;
+};
+
 var getRecsByRecBlock = function(resultOfQuery) {
   var recs = resultOfQuery['emitted']['complete'][0];
   console.log('recs = ' + recs);
@@ -291,3 +312,13 @@ var getRecsByRecBlock = function(resultOfQuery) {
   return recsByRecBlock;
 };
 
+exports.attendance = function(req, res) {
+  RecModel.find().select('name people').exec(function (err) {
+    var campersByRec = getCampersByRec(this);
+
+    res.render('attendance', {
+      title : 'Attendance',
+      campers : campersByRec,
+    });
+  });
+};
