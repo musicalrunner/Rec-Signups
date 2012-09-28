@@ -207,7 +207,6 @@ exports.assign = function(req, res) {
         cabins : (new CamperModel()).schema.path('cabin').enumValues,
         campers : campersByCabin,
         recs : recsByRecBlock,
-        hasNewData : 'true',
       });
     });
   });
@@ -241,15 +240,7 @@ exports.submitAssignment = function(req, res) {
         rec.save(function() {console.log('saved rec')});
 
         // Call the assign page back
-        res.render('assign', {
-          title : 'Assign Recs',
-          recBlocks : '',
-          cabins : '', 
-          campers : '',
-          recs : '',
-          hasNewData : 'false',
-        });
-
+        exports.assign(req, res);
       });
   });
 };

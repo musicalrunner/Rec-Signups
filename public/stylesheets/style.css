@@ -12,10 +12,6 @@ form {
   margin : 16px;
 }
 
-.hide {
-  display : none;
-}
-
 .button, .camper, .rec {
   border : solid;
   border-radius : 8px;

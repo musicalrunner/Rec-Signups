@@ -1,6 +1,5 @@
 $('document').ready(function() {
 
-
   // Get Buttons
   var $buttons = $('.button');
   var $recBlockButtons = $('.button.recBlock');
@@ -116,22 +115,3 @@ var recClicked = function(button) {
 
 // Global var representing current rec assignment
 var recAssignment = {};
-
-var saveCampersByCabin = function(inCampersByCabin) {
-  if(localStorage) {
-    localStorage.setItem('campersByCabin', JSON.stringify(inCampersByCabin));
-  }
-}
-
-var localSave = function(key, item) {
-  if(localStorage) {
-    localStorage.setItem(key, JSON.stringify(item));
-  }
-}
-
-var saveRecsByRecBlock = function(inRecsByRecBlock) {
-  if(localStorage) {
-    localStorage.setItem('recsByRecBlock', JSON.stringify(inRecsByRecBlock));
-  }
-}
-
