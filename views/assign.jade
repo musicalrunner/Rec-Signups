@@ -2,6 +2,17 @@ extends layout
 
 block content
   script(src = '/javascripts/assign.js')
+  - if (hasNewData === 'true)
+    .hide#recsByRecBlock
+      !{JSON.stringify(recs)}
+    .hide#campersByCabin
+      !{JSON.stringify(campers)}
+    .hide#recBlocks
+      !{JSON.stringify(recBlocks)}
+    .hide#cabins
+      !{JSON.stringify(cabins)}
+  - else
+    
   h1 #{title}
   h3 Click on the rec period to assign
 
