@@ -6,12 +6,35 @@ var Schema = mongoose.Schema;
 
 // Schemas
 //
-// Validation (enums)
+// Validation 
+// (enums)
 
 var recBlocks = 'first second double'.split(' ');
 var cabins = 'Dorr.Smith.Sault.Burns.Towne.Wade.Up Dorm.Down Dorm'.split('.');
 
-//
+// (functions)
+
+var validateCamperNewRec = function(recs) {
+  // We pop here but push at the end so recs is unaltered
+  var newRec = recs.pop();
+  for(var i = 0; i < recs.length; i++)
+  {
+    if(newRec.week === recs[i].week)
+    {
+      var sameRecBlock = (newRec.recBlock === recs[i].recBlock);
+      var newDouble = (newRec.recBlock === 'double');
+      var oldDouble = (recs[i].recBlock === 'double');
+      if(sameRecBlock || newDouble || oldDouble)
+      {
+        recs.push(newRec);
+        return false;
+      }
+    }
+  }
+  recs.push(newRec);
+  return true;
+};
+
 // Invariant : for each rec in camper.rec, rec.campers must contain camper.name
 
 var Person = new Schema( {
@@ -33,20 +56,16 @@ var Camper = new Schema( {
   cabin : { type : String, enum : cabins},
 });
 
-/*
-var Cabin = new Schema( {
-  name : String,
-  campers : [Camper],
-});
-*/
-  
 
 // Models
 
 var PersonModel = mongoose.model('Person', Person);
 var RecModel = mongoose.model('Rec', Rec);
 var CamperModel = mongoose.model('Camper', Camper);
-//var CabinModel = mongoose.model('Cabin', Cabin);
+//
+// Apply validation
+
+CamperModel.schema.path('recs').validate(validateCamperNewRec, 'Invalid Rec');
 
 /*
  * GET home page.
@@ -76,12 +95,6 @@ exports.test = function(req, res){
   camper.recs.push(rec);
   camper.cabin = 'Dorr';
 
-  /*
-  var cabin = new CabinModel();
-  cabin.name = 'Dorr';
-  cabin.campers.push(camper);
-  */
-
   dude.save( function(err) {
     if (err) { throw err; }
     console.log('Dude saved');
@@ -94,12 +107,6 @@ exports.test = function(req, res){
     if (err) { throw err; }
     console.log('Camper saved');
   });
-  /*
-  cabin.save( function(err) {
-    if (err) { throw err; }
-    console.log('Cabin saved');
-  });
-  */
 
   console.log('Dude:');
   console.log(JSON.stringify(dude));
@@ -107,8 +114,6 @@ exports.test = function(req, res){
   console.log(JSON.stringify(rec));
   console.log('Camper:');
   console.log(JSON.stringify(camper));
-  //console.log('Cabin:');
-  //console.log(JSON.stringify(cabin));
 
 
 
@@ -171,11 +176,13 @@ exports.addingRec = function(req, res) {
   var recName = req.param('name');
   var recCapacity = req.param('capacity');
   var recRecBlock = req.param('recBlock');
+  var weekNum = req.param('weekNum');
 
   var rec = new RecModel();
   rec.name = recName;
   rec.capacity = recCapacity;
   rec.recBlock = recRecBlock;
+  rec.week= weekNum;
 
   rec.save( function(err) {
     if (err) { throw err; }
@@ -213,7 +220,7 @@ exports.assign = function(req, res) {
 };
 
 exports.submitAssignment = function(req, res) {
-  // Get the data
+  // Get the data to submit
   var assignment = {};
   assignment['camperFirstName'] = req.param('camper').split('-')[0];
   assignment['camperLastName'] = req.param('camper').split('-')[1];
@@ -222,6 +229,7 @@ exports.submitAssignment = function(req, res) {
 
   console.log('assignment = ' + JSON.stringify(assignment));
 
+  // Find the camper and rec database entries
   CamperModel.findOne( {
     "name.firstName" : assignment['camperFirstName'],
     'name.lastName' : assignment['camperLastName'],
@@ -236,7 +244,7 @@ exports.submitAssignment = function(req, res) {
         console.log('found rec ' + JSON.stringify(rec));
         camper.recs.push(rec);
         rec.people.push(camper.name[0]);
-        camper.save(function() {console.log('saved camper')});
+        camper.save(function(err) {if (err) { throw err; } console.log('saved camper')});
         rec.save(function() {console.log('saved rec')});
 
         // Call the assign page back
