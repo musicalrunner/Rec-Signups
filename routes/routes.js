@@ -130,14 +130,15 @@ exports.reset = function(req, res) {
   RecModel.remove({}, function(err) {
     if (err) { throw err; }
     console.log('removed recs');
-  });
-  CamperModel.remove({}, function(err) {
-    if (err) { throw err; }
-    console.log('removed campers');
-  });
-  PersonModel.remove({}, function(err) {
-    if (err) { throw err; }
-    console.log('removed people');
+    CamperModel.remove({}, function(err) {
+      if (err) { throw err; }
+      console.log('removed campers');
+      PersonModel.remove({}, function(err) {
+        if (err) { throw err; }
+        console.log('removed people');
+        res.render('index', { title : 'Home'});
+      });
+    });
   });
 };
 
