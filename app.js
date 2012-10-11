@@ -29,6 +29,7 @@ app.configure('development', function(){
 app.get('/', routes.index);
 app.get('/test', routes.test);
 app.get('/setup', routes.setup);
+app.get('/reset', routes.reset);
 app.get('/setup/addCamper', routes.addCamper);
 app.post('/setup/addingCamper', routes.addingCamper);
 app.get('/setup/addRec', routes.addRec);
