@@ -64,7 +64,7 @@ $('document').ready(function() {
 var recBlockClicked = function(recBlock) {
   recAssignment['recBlock'] = recBlock;
   $recBlockButtons.detach();
-  $cabinButtons.appendTo('body');
+  $cabinButtons.appendTo('#buttons');
 };
 
 // Click handler for cabin buttons
@@ -73,13 +73,13 @@ var cabinClicked = function(cabin) {
   console.log('cabin = ' + cabin);
 
   $cabinButtons.detach();
-  $camperButtons[cabin].appendTo('body');
+  $camperButtons[cabin].appendTo('#buttons');
 };
 
 var camperClicked = function(camper) {
   recAssignment['camper'] = camper;
   $allCamperButtons.detach();
-  $recButtons[recAssignment['recBlock']].appendTo('body');
+  $recButtons[recAssignment['recBlock']].appendTo('#buttons');
   $recButtons[recAssignment['recBlock']].wrap(function(index) {
     var toReturn = '<form method="POST" id="';
     toReturn += $(this).html().replace(' ', '-') + '-form"/>';

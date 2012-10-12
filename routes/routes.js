@@ -1,8 +1,8 @@
 // mongoose stuff
 
 var mongoose = require('mongoose');
-//var db = mongoose.connect('mongodb://localhost:27017/recsignups');
-var db = mongoose.connect(process.env.MONGOHQ_URL);
+var db = mongoose.connect('mongodb://localhost:27017/recsignups');
+//var db = mongoose.connect(process.env.MONGOHQ_URL);
 var Schema = mongoose.Schema;
 
 // Schemas
