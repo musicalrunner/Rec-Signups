@@ -32,3 +32,16 @@ form {
 .camper, .rec {
   max-width : 100px;
 }
+
+#bodyDiv {
+  border : solid;
+  height : 300px;
+  width : 1000px;
+  padding : 32px;
+  margin : 32px;
+  display : table;
+}
+
+#homeButton {
+  display : table-row;
+}
