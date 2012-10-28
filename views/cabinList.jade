@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  h1= title
+  
+  - for(cabin in campersByCabin.campers)
+    h2= cabin
+    ul
+      - for(i in campersByCabin.campers[cabin])
+        - var camper = campersByCabin.campers[cabin][i]
+        - var camperName = camper.name[0]
+        li
+          .camper
+            ul
+              li #{camperName.firstName} #{camperName.lastName}
+              - for(var i=0; i < camper.recs.length; i++)
+                li= camper.recs[i].name
+
+

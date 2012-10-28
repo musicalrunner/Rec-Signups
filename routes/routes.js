@@ -44,7 +44,6 @@ var validateCamperNewRec = function(recs) {
   return true;
 };
 
-// Invariant : for each rec in camper.rec, rec.campers must contain camper.name
 
 var Person = new Schema( {
   firstName : String,
@@ -225,7 +224,8 @@ exports.assign = function(req, res) {
   CamperModel.find().select('name cabin').exec(function(err) {
     if (err) { throw err; }
 
-    var campersByCabin = getCampersByCabin(this);
+    var campersByCabin = getCampersByCabin(this)['names'];
+    console.log(JSON.stringify(campersByCabin));
 
     // Get the recs
     RecModel.find().select('name recBlock').exec(function(err) {
@@ -282,21 +282,28 @@ exports.submitAssignment = function(req, res) {
 
 var getCampersByCabin = function(resultOfQuery) {
   var people = resultOfQuery['emitted']['complete'][0];
-  var campersByCabin = {};
+  var campersByCabin = {
+      campers : {},
+      names : {},
+    };
   var cabins = (new CamperModel()).schema.path('cabin').enumValues;
 
   for(var i = 0; i < cabins.length; i++)
   {
-    campersByCabin[cabins[i]] = new Array();
+    campersByCabin[cabins[i]] = {};
+    campersByCabin['campers'][cabins[i]] = new Array();
+    campersByCabin['names'][cabins[i]] = new Array();
   }
 
   for(var i = 0; i < people.length; i++)
   {
+    var camper = people[i];
     var firstName = people[i]['name'][0]['firstName'];
     var lastName = people[i]['name'][0]['lastName'];
     var name = firstName + ' ' + lastName;
     var cabin = people[i]['cabin'];
-    campersByCabin[cabin].push(name);
+    campersByCabin['campers'][cabin].push(camper);
+    campersByCabin['names'][cabin].push(name);
   }
   return campersByCabin;
 };
@@ -356,3 +363,17 @@ exports.attendance = function(req, res) {
     });
   });
 };
+
+exports.cabinList = function(req, res) {
+  CamperModel.find().exec(function (err) {
+    if (err) { throw err; }
+    var campersByCabin = getCampersByCabin(this);
+
+    res.render('cabinList', {
+      title : 'Cabin Lists',
+      campersByCabin : campersByCabin,
+    });
+  });
+};
+
+
