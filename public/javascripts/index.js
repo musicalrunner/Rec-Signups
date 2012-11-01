@@ -6,4 +6,11 @@ $('document').ready(function() {
   $('#cabinList').wrap('<a href="/cabinList" />');
   $('#reset').wrap('<a href="/reset" />');
 
+  $('.button').click(function(obj) {
+    var weekNum = $('select#weekID').val();
+    console.log('weekNum = ' + weekNum);
+    $('#weekForm').attr('action', obj.id() + '/' + weekNum) // finish this!
+  });
+
+
 });

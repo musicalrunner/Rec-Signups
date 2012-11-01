@@ -5,8 +5,16 @@ block content
   h1= title
   p Welcome to Rec Signups!
   
-  span.button#setup Setup
-  span.button#go Assign Recs
-  span.button#attendance Get Attendance Sheets
-  span.button#cabinList Get Cabin Lists
-  span.button#reset Reset Everything
+  #buttons
+    span.button#setup Setup
+    span.button#go Assign Recs
+    span.button#attendance Get Attendance Sheets
+    span.button#cabinList Get Cabin Lists
+    span.button#reset Reset Everything
+
+  #weekDiv
+    form#weekForm
+      label(for='week') Week Number:
+      select(name='week', id='weekID')
+        - for(var i=1; i <= 4; i++)
+          option #{i}

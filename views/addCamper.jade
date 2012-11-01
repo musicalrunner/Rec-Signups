@@ -5,12 +5,12 @@ block content
   h1 Add Camper
 
   #add Enter the camper's info:
-    form(name='addCamper', id='addCamperForm')
+    form(name='addCamper', action='/setup/addingCamper', method='POST', id='addCamperForm')
       label(for='firstName') First Name:
       input(name='firstName', type='text', id='firstNameInput')
       br
       label(for='lastName') Last Name:
-      input(name='lastName', type='text', id='lastNameINput')
+      input(name='lastName', type='text', id='lastNameInput')
       br
       label(for='cabin') Cabin:
       select(name='cabin')

@@ -228,10 +228,12 @@ exports.assign = function(req, res) {
     console.log(JSON.stringify(campersByCabin));
 
     // Get the recs
-    RecModel.find().select('name recBlock').exec(function(err) {
+    RecModel.find().select('name recBlock week').exec(function(err) {
       if (err) { throw err; }
     
-      var recsByRecBlock = getRecsByRecBlock(this);
+
+      var weekNumber = req.param('week');
+      var recsByRecBlock = getRecsByRecBlock(this, weekNumber);
 
       // Render the page
       res.render('assign', {
