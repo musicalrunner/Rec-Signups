@@ -175,6 +175,7 @@ exports.addingCamper = function(req, res) {
   var camperDude = new CamperModel();
   camperDude.name.push(dude);
   camperDude.cabin = cabin;
+  camperDude.recs = [];
 
   dude.save( function(err) {
     if (err) { throw err; }
