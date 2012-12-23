@@ -184,6 +184,7 @@ exports.addingCamper = function(req, res) {
   camperDude.save( function(err) {
     if (err) { throw err; }
     console.log('Camper saved');
+    console.log('Here is the camper: ' + JSON.stringify(this));
     res.render('addCamper', { 
       title : 'Add Camper', 
       cabins : (new CamperModel()).schema.path('cabin').enumValues,
