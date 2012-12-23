@@ -23,3 +23,6 @@ block content
     - for(recBlock in recs)
      - for(var i = 0; i < recs[recBlock].length; i++)
        span.button.rec(class= recBlock, id=recs[recBlock][i].replace(' ','-')) #{recs[recBlock][i]}
+
+  // Invisible div for week number
+  #weekNumber(style='display:none') #{weekNum}

@@ -156,6 +156,7 @@ exports.setup = function(req, res) {
 };
 
 exports.addCamper = function(req, res) {
+  // Does NOT have to deal with weeks
   res.render('addCamper', { 
     title : 'Add Camper', 
     cabins : (new CamperModel()).schema.path('cabin').enumValues,
@@ -242,6 +243,7 @@ exports.assign = function(req, res) {
         cabins : (new CamperModel()).schema.path('cabin').enumValues,
         campers : campersByCabin,
         recs : recsByRecBlock,
+        weekNum : weekNumber,
       });
     });
   });
@@ -254,6 +256,7 @@ exports.submitAssignment = function(req, res) {
   assignment['camperLastName'] = req.param('camper').split('-')[1];
   assignment['recBlock'] = req.param('recBlock');
   assignment['recName'] = req.param('rec');
+  assignment['weekNum'] = req.param('weekNum');
 
   console.log('assignment = ' + JSON.stringify(assignment));
 
@@ -267,6 +270,7 @@ exports.submitAssignment = function(req, res) {
       RecModel.findOne( {
         name : assignment['recName'].replace('-',' '),
         recBlock : assignment['recBlock'],
+        week : assignment['weekNum'],
       }, function(err, rec) {
         if (err) { throw err; }
         console.log('found rec ' + JSON.stringify(rec));
@@ -356,7 +360,7 @@ var getRecsByRecBlock = function(resultOfQuery) {
 };
 
 exports.attendance = function(req, res) {
-  RecModel.find().select('name people').exec(function (err) {
+  RecModel.find({'week':req.param('week')}).select('name people').exec(function (err) {
     var campersByRec = getCampersByRec(this);
 
     res.render('attendance', {
