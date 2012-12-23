@@ -1,15 +1,21 @@
 $('document').ready(function() {
 
+/*
   $('#setup').wrap('<a href="/setup" />');
-  $('#go').wrap('<a href="/assign" />');
+  $('#assign').wrap('<a href="/assign" />');
   $('#attendance').wrap('<a href="/attendance" />');
   $('#cabinList').wrap('<a href="/cabinList" />');
   $('#reset').wrap('<a href="/reset" />');
+  */
 
-  $('.button').click(function(obj) {
+
+  $('.button').click(function() {
+    clicked = $(this);
     var weekNum = $('select#weekID').val();
     console.log('weekNum = ' + weekNum);
-    $('#weekForm').attr('action', obj.id() + '/' + weekNum) // finish this!
+    console.log('this.id() = ' + clicked.attr('id'));
+    $('#weekForm').attr('action', clicked.attr('id')) // finish this!
+    $('#weekForm').submit();
   });
 
 
