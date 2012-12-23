@@ -309,6 +309,13 @@ var getCampersByCabin = function(resultOfQuery) {
     var lastName = people[i]['name'][0]['lastName'];
     var name = firstName + ' ' + lastName;
     var cabin = people[i]['cabin'];
+    for(var j = 0; j < camper.recs.length; j++)
+    {
+      if(camper.recs[j].people.length == 0)
+      {
+        camper.recs.splice(j,1);
+      }
+    }
     campersByCabin['campers'][cabin].push(camper);
     campersByCabin['names'][cabin].push(name);
   }
