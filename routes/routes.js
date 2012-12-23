@@ -374,6 +374,7 @@ exports.cabinList = function(req, res) {
   CamperModel.find().exec(function (err) {
     if (err) { throw err; }
     var campersByCabin = getCampersByCabin(this);
+    console.log(JSON.stringify(campersByCabin));
 
     res.render('cabinList', {
       title : 'Cabin Lists',
