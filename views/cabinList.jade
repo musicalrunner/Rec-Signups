@@ -15,4 +15,6 @@ block content
               li #{camperName.firstName} #{camperName.lastName}
               - for(var i=0; i < camper.recs.length; i++)
                 - var rec = camper.recs[i]
+                - if (rec.people.length === 0)
+                  - continue
                 li Week #{rec.week}, #{rec.recBlock} rec: #{rec.name}
