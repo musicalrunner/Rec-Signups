@@ -238,6 +238,7 @@ exports.addingRec = function(req, res) {
 };
 
 exports.assign = function(req, res) {
+  var weekNumber = req.param('week');
   // Get the Campers
   CamperModel.find().select('name cabin').exec(function(err) {
     if (err) { throw err; }
@@ -246,7 +247,9 @@ exports.assign = function(req, res) {
     console.log(JSON.stringify(campersByCabin));
 
     // Get the recs
-    RecModel.find().select('name recBlock week').exec(function(err) {
+    RecModel.find({'week' : weekNumber})
+      .select('name recBlock week')
+      .exec(function(err) {
       if (err) { throw err; }
     
 
@@ -273,7 +276,7 @@ exports.submitAssignment = function(req, res) {
   assignment['camperLastName'] = req.param('camper').split('-')[1];
   assignment['recBlock'] = req.param('recBlock');
   assignment['recName'] = req.param('rec');
-  assignment['weekNum'] = req.param('weekNum');
+  assignment['weekNum'] = req.param('week');
 
   console.log('assignment = ' + JSON.stringify(assignment));
 

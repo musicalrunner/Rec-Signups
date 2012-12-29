@@ -107,7 +107,7 @@ var recClicked = function(button) {
     $('#' + nField + '-input').hide();
   }
 
-  var weekNumString = '<input type="hidden" name="weekNum"';
+  var weekNumString = '<input type="hidden" name="week"';
   weekNumString += ' id="weekNumInputID" value="' + $('#weekNumber').html() + '" />';
   $form.append(weekNumString);
 
