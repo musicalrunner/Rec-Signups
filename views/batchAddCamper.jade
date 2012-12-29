@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  script(src='/javascripts/batchAddCamper.js')
+  h1 Add Camper
+
+  #add 
+    | Enter each camper on its own line, in Last, First format
+    | hyphens (John Doe-Smith) and apostrophes (Barack O'Bama) are ok, but extra commas are not.
+    form(name='addCamper', action='/setup/addingCamper', method='POST', id='addCamperForm')
+      label(for='firstName') First Name:
+      input(name='firstName', type='text', id='firstNameInput')
+      br
+      label(for='lastName') Last Name:
+      input(name='lastName', type='text', id='lastNameInput')
+      br
+      label(for='cabin') Cabin:
+      select(name='cabin')
+        - for(var i = 0; i < cabins.length; i++)
+          option(value=cabins[i]) #{cabins[i]}
+
+    span.button#submit Add

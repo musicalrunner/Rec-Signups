@@ -172,9 +172,14 @@ exports.setup = function(req, res) {
 };
 
 exports.addCamper = function(req, res) {
-  // Does NOT have to deal with weeks
-  res.render('addCamper', { 
     title : 'Add Camper', 
+    cabins : (new CamperModel()).schema.path('cabin').enumValues,
+  });
+};
+
+exports.batchAddCamper = function(req, res) {
+  res.render('batchAddCamper', { 
+    title : 'Batch Add Camper', 
     cabins : (new CamperModel()).schema.path('cabin').enumValues,
   });
 };
@@ -211,6 +216,13 @@ exports.addingCamper = function(req, res) {
 exports.addRec = function(req, res) {
   res.render('addRec', {
     title : 'Add Rec',
+    recBlocks : (new RecModel()).schema.path('recBlock').enumValues,
+  });
+};
+
+exports.batchAddRec = function(req, res) {
+  res.render('batchAddRec', {
+    title : 'Batch Add Rec',
     recBlocks : (new RecModel()).schema.path('recBlock').enumValues,
   });
 };
