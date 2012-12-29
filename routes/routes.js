@@ -96,14 +96,25 @@ exports.test = function(req, res){
   rec.name = 'Phys Fit';
   rec.capacity = 25;
   rec.recBlock = 'first';
-  rec.people.push(dude);
+  rec.week = 1;
 
   var camper = new CamperModel();
   camper.name.push(dude);
-  camper.recs.push(rec);
   camper.cabin = 'Dorr';
 
+  var dude2 = new PersonModel();
+  dude2.firstName = 'Joe';
+  dude2.lastName = 'Schmo';
+
+  var camper2 = new CamperModel();
+  camper2.name.push(dude2);
+  camper2.cabin = 'Dorr';
+
   dude.save( function(err) {
+    if (err) { throw err; }
+    console.log('Dude saved');
+  });
+  dude2.save( function(err) {
     if (err) { throw err; }
     console.log('Dude saved');
   });
@@ -115,20 +126,24 @@ exports.test = function(req, res){
     if (err) { throw err; }
     console.log('Camper saved');
   });
+  camper2.save( function(err) {
+    if (err) { throw err; }
+    console.log('Camper saved');
+  });
 
+/*
   console.log('Dude:');
   console.log(JSON.stringify(dude));
   console.log('Rec:');
   console.log(JSON.stringify(rec));
   console.log('Camper:');
   console.log(JSON.stringify(camper));
+  */
 
 
 
-  res.render('test', { 
-    title: 'test', 
-    aCamper : camper, 
-    aRec : rec, 
+  res.render('index', { 
+    title: 'Home', 
   });
 };
 
@@ -148,6 +163,7 @@ exports.reset = function(req, res) {
     });
   });
 };
+
 
 exports.setup = function(req, res) {
   console.log('getting setup');
