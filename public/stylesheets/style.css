@@ -35,7 +35,9 @@ form {
 
 #bodyDiv {
   border : solid;
-  height : 300px;
+  border-radius : 10px;
+  min-height : 300px;
+  height : 500px;
   width : 1000px;
   padding : 32px;
   margin : 32px;

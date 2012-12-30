@@ -1,8 +1,9 @@
 $('document').ready(function() {
 
-  $('.button').each(function(index, element) {
+  $('.link').each(function(index, element) {
     $element = $(element);
-    $element.wrap('<a href="/' + $element.attr('id') + '" />');
+    $element.wrap('<a href="/setup/' + $element.attr('id') + '" />');
+    console.log('wrapped <a href="/setup/' + $element.attr('id') + '" />');
   });
 
   /*

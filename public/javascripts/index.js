@@ -5,7 +5,7 @@ $('document').ready(function() {
     $('#weekID').attr('value', weekNum);
   }
 
-  $('.button:not([id="setWeek"])').each(function(index, element) {
+  $('.link').each(function(index, element) {
     $element = $(element);
     $element.wrap('<a href="/' + $element.attr('id') + '?week=' + weekNum + '" />');
   });

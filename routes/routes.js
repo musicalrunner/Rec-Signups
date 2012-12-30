@@ -172,6 +172,7 @@ exports.setup = function(req, res) {
 };
 
 exports.addCamper = function(req, res) {
+  res.render('addCamper', {
     title : 'Add Camper', 
     cabins : (new CamperModel()).schema.path('cabin').enumValues,
   });
@@ -212,6 +213,56 @@ exports.addingCamper = function(req, res) {
   });
   });
 };
+
+exports.batchAddingCamper = function(req, res) {
+  var camperListText = req.body.campers;
+  var camperList = camperListText.split('\n');
+
+  var cabin = req.body.cabin;
+
+
+  console.log('second entry in camperList is ' + camperList[1]);
+
+  camperList.forEach( function(name) {
+    console.log('name = ' + name);
+    var splitNames = name.split(', ');
+    console.log('splitNames = ' + splitNames);
+    if (splitNames.length != 2) {
+      //error!
+      var x1 = 0;
+    }
+    else {
+      var person = new PersonModel();
+      person.firstName = splitNames[1];
+      person.lastName = splitNames[0];
+
+      person.save( function(err) {
+        if (err) { throw err; }
+        console.log('Person saved');
+      });
+
+      var camper = new CamperModel();
+      camper.name.push(person);
+      camper.cabin = cabin;
+
+      camper.save( function(err) {
+        if (err) { throw err; }
+        console.log('Camper saved');
+        console.log('Here is the camper: ' + JSON.stringify(this));
+      });
+    }
+  });
+
+
+
+
+
+  res.render('batchAddcamper', {
+    title : 'Add Camper',
+    cabins : (new CamperModel()).schema.path('cabin').enumValues,
+  });
+
+}
 
 exports.addRec = function(req, res) {
   res.render('addRec', {

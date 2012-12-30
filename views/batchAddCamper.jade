@@ -5,14 +5,11 @@ block content
   h1 Add Camper
 
   #add 
-    | Enter each camper on its own line, in Last, First format
+    | Enter each camper on its own line, in "Last, First" format.  
     | hyphens (John Doe-Smith) and apostrophes (Barack O'Bama) are ok, but extra commas are not.
-    form(name='addCamper', action='/setup/addingCamper', method='POST', id='addCamperForm')
-      label(for='firstName') First Name:
-      input(name='firstName', type='text', id='firstNameInput')
-      br
-      label(for='lastName') Last Name:
-      input(name='lastName', type='text', id='lastNameInput')
+    form(name='addCamper', action='/setup/batchAddingCamper', method='POST', id='addCamperForm')
+      label(for='campers') List of Campers
+      textarea(name='campers', rows='15', cols='50') Wiggin, John
       br
       label(for='cabin') Cabin:
       select(name='cabin')
