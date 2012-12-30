@@ -451,18 +451,23 @@ var getCampersByRec = function(resultOfQuery) {
   var recs = resultOfQuery['emitted']['complete'][0];
 
   var campersByRec = {};
+  for(var i = 0; i < recs.length; i++)
+  {
+    campersByRec[recs[i]['name']] = {};
+  }
 
   for(var i = 0; i < recs.length; i++)
   {
     var recName = recs[i]['name'];
-    campersByRec[recName] = new Array();
+    var recBlock = recs[i]['recBlock'];
+    campersByRec[recName][recBlock] = new Array();
     var people = recs[i]['people'];
     for(var j = 0; j < people.length; j++)
     {
       var firstName = people[j]['firstName'];
       var lastName = people[j]['lastName'];
       var name = firstName + ' ' + lastName;
-      campersByRec[recName].push(name);
+      campersByRec[recName][recBlock].push(name);
     }
   }
   return campersByRec;
@@ -493,7 +498,7 @@ var getRecsByRecBlock = function(resultOfQuery) {
 };
 
 exports.attendance = function(req, res) {
-  RecModel.find({'week':req.param('week')}).select('name people').exec(function (err) {
+  RecModel.find({'week':req.param('week')}).select('name people recBlock').exec(function (err) {
     var campersByRec = getCampersByRec(this);
 
     res.render('attendance', {

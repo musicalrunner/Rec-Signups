@@ -3,8 +3,9 @@ extends layout
 block content
   h1= title
   - for(recName in campers)
-    h2= recName
-    ul.recList
-      - for(var j = 0; j < campers[recName].length; j++)
-        li= campers[recName][j]
+    - for(recBlock in campers[recName])
+      h2= recName+' '+recBlock+' rec'
+      ul.recList
+        - for(var j = 0; j < campers[recName][recBlock].length; j++)
+          li= campers[recName][recBlock][j]
 
