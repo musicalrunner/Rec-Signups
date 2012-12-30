@@ -6,12 +6,12 @@ block content
   p Welcome to Rec Signups!
   
   #buttons
-    span.button.link#setup Setup
-    span.button.link#assign Assign Recs
-    span.button.link#attendance Get Attendance Sheets
-    span.button.link#cabinList Get Cabin Lists
-    span.button.link#reset Reset Everything
-    span.button.link#test Load Test Campers
+    .button.link#setup Setup
+    .button.link#assign Assign Recs
+    .button.link#attendance Get Attendance Sheets
+    .button.link#cabinList Get Cabin Lists
+    .button.link#reset Reset Everything
+    .button.link#test Load Test Campers
 
   #weekDiv
     form#weekForm
@@ -19,4 +19,4 @@ block content
       select(name='week', id='weekID')
         - for(var i=1; i <= 4; i++)
           option #{i}
-    span.button#setWeek Save Week Number
+    .button#setWeek Save Week Number

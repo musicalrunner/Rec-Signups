@@ -18,6 +18,7 @@ form {
   background-color : #DDF1FF;
   padding : 8px;
   margin : 8px;
+  display : inline-block
 }
 
 .button:hover {
@@ -36,7 +37,6 @@ form {
 #bodyDiv {
   border : solid;
   border-radius : 10px;
-  min-height : 300px;
   height : 500px;
   width : 1000px;
   padding : 32px;
@@ -46,4 +46,8 @@ form {
 
 #homeButton {
   display : table-row;
+}
+
+fieldset {
+  display : inline-block;
 }

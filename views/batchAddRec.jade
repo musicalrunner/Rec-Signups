@@ -1,0 +1,36 @@
+extends layout
+
+block content
+  script(src='/javascripts/batchAddRec.js')
+  h1 Add Rec
+
+  #add 
+    | Enter each rec on its own line in the format "Rec Name, Capacity".
+    br
+    | Check the boxes corresponding to when these recs meet: first, second,
+    | or double recs. Also check which weeks the rec is offered: all, or some
+    | combination of weeks 1-4 (3-week sessions need not worry about week 4).
+    form(name='addRec', action='/setup/batchAddingRec', method='POST', id='addRecForm')
+      label(for='recs') List of Recs 
+      br
+      textarea(name='recs', rows='15', cols='50') Kayaking, 16
+      br
+      fieldset
+        legend Rec Blocks
+        - for(var i = 0; i < recBlocks.length; i++)
+          label(for=('recBlock_' + recBlocks[i])) #{recBlocks[i]} Rec:
+          input(type='checkbox', name='recBlocks', value=recBlocks[i], id=('check_' + recBlocks[i]))
+          br
+      
+
+      fieldset
+        legend Weeks
+        label(for='week_all') All Weeks
+        input(type='checkbox', name='weeks', value='all', id='week_all')
+        br
+        - for(var i = 1; i <= 4; i++)
+          label(for=('week_' + i)) Week #{i}
+          input(type='checkbox', name='weeks', value=i, id=('week_' + i))
+          br
+
+    .button#submit Add

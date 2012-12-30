@@ -254,9 +254,6 @@ exports.batchAddingCamper = function(req, res) {
   });
 
 
-
-
-
   res.render('batchAddcamper', {
     title : 'Add Camper',
     cabins : (new CamperModel()).schema.path('cabin').enumValues,
@@ -299,6 +296,59 @@ exports.addingRec = function(req, res) {
     recBlocks : (new RecModel()).schema.path('recBlock').enumValues,
   });
 };
+
+exports.batchAddingRec = function(req, res) {
+  var recListText = req.body.recs;
+  var recList = recListText.split('\n');
+  var recBlocks = req.body.recBlocks;
+  var weeks = req.body.weeks;
+
+  // Resolve shorthand for all weeks
+  if(weeks === 'all')
+  {
+    weeks = [1,2,3,4];
+  }
+
+  console.log('recList = ' + JSON.stringify(recList));
+  console.log('recBlocks = ' + JSON.stringify(recBlocks));
+  console.log('weeks = ' + JSON.stringify(weeks));
+
+  recList.forEach( function(recLine, index) {
+    console.log('recLine = ' + recLine);
+    var splitRecLine = recLine.split(', ');
+    console.log('splitRecLine = ' + splitRecLine);
+    if(splitRecLine.length != 2)
+    {
+      //ERROR!
+      var aklsdjf = 0;
+    }
+    else
+    {
+      recBlocks.forEach( function(block) {
+        weeks.forEach( function(week) {
+          var rec = new RecModel();
+          rec.name = splitRecLine[0];
+          rec.capacity = splitRecLine[1];
+          rec.recBlock = block;
+          rec.week = week;
+
+          rec.save( function(err) {
+            if (err) { throw err; }
+            console.log('Rec saved');
+            console.log('Here is the rec: ' + JSON.stringify(this));
+          });
+        });
+      });
+    }
+  });
+
+  res.render('batchAddRec', {
+    title : 'Add Rec',
+    recBlocks : (new RecModel()).schema.path('recBlock').enumValues,
+  });
+
+};
+
 
 exports.assign = function(req, res) {
   var weekNumber = req.param('week');
