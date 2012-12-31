@@ -23,27 +23,38 @@ var cabins = 'Dorr.Smith.Sault.Burns.Towne.Wade.Up Dorm.Down Dorm'.split('.');
 
 // (functions)
 
-var validateCamperNewRec = function(recs) {
+var validateNoScheduleConflict = function(recs) {
   // We pop here but push at the end so recs is unaltered
-  var newRec = recs.pop();
-  for(var i = 0; i < recs.length; i++)
+  var newRec = recs[recs.length-1];
+  var newDouble = (newRec.recBlock === 'double');
+  for(var i = 0; i < recs.length-1; i++)
   {
     if(newRec.week === recs[i].week)
     {
       var sameRecBlock = (newRec.recBlock === recs[i].recBlock);
-      var newDouble = (newRec.recBlock === 'double');
       var oldDouble = (recs[i].recBlock === 'double');
       if(sameRecBlock || newDouble || oldDouble)
       {
-        recs.push(newRec);
         return false;
       }
     }
   }
-  recs.push(newRec);
   return true;
 };
 
+var validateCapacity = function(recs) {
+  // We pop here but push at the end so recs is unaltered
+  var newRec = recs[recs.length-1];
+  console.log(JSON.stringify(newRec));
+  console.log('recs.length = ' + recs.length);
+  console.log('newRec.capacity = ' + newRec.capacity);
+  if(newRec.people.length > newRec.capacity) {
+    return false;
+  }
+  else {
+    return true;
+  }
+}
 
 var Person = new Schema( {
   firstName : String,
@@ -73,7 +84,8 @@ var CamperModel = mongoose.model('Camper', Camper);
 //
 // Apply validation
 
-CamperModel.schema.path('recs').validate(validateCamperNewRec, 'Invalid Rec');
+CamperModel.schema.path('recs').validate(validateNoScheduleConflict, 'Schedule Conflict');
+CamperModel.schema.path('recs').validate(validateCapacity, 'Rec Over Capacity');
 
 /*
  * GET home page.
@@ -94,7 +106,7 @@ exports.test = function(req, res){
 
   var rec = new RecModel();
   rec.name = 'Phys Fit';
-  rec.capacity = 25;
+  rec.capacity = 1;
   rec.recBlock = 'first';
   rec.week = 1;
 
@@ -382,6 +394,53 @@ exports.assign = function(req, res) {
   });
 };
 
+var dealWithError = function(err, camper, rec, res) {
+  if(err.errors.recs.type === 'Schedule Conflict')
+  {
+    // Deal with schedule conflict
+    // First get the conflicting assignment
+    var conflictingRec = {};
+
+    var newDouble = (rec.recBlock === 'double');
+
+    if(!camper.recs.some( function (oldRec) {
+      if(oldRec.week === rec.week) {
+        var sameRecBlock = (rec.recBlock === oldRec.recBlock);
+        var oldDouble = (oldRec.recBlock === 'double');
+        if(sameRecBlock || newDouble || oldDouble) {
+          conflictingRec = oldRec;
+          return true;
+        }
+        else {
+          return false;
+        }
+      }
+    })) {
+      throw (err);
+    }
+
+    // Give page with resolution options
+    res.render('scheduleConflict', {
+      title : 'Schedule Conflict',
+      camper : camper,
+      newRec : rec,
+      existingRec : conflictingRec,
+    });
+  }
+  else if(err.errors.recs.type === 'Rec Over Capacity')
+  {
+    // Deal with rec over capacity
+    res.render('overCapacity', {
+      title : 'Rec Over Capacity',
+      camper : camper,
+      rec : rec,
+    });
+  }
+  else {
+    throw (err);
+  }
+}
+
 exports.submitAssignment = function(req, res) {
   // Get the data to submit
   var assignment = {};
@@ -409,11 +468,28 @@ exports.submitAssignment = function(req, res) {
         console.log('found rec ' + JSON.stringify(rec));
         camper.recs.push(rec);
         rec.people.push(camper.name[0]);
-        camper.save(function(err) {if (err) { throw err; } console.log('saved camper')});
-        rec.save(function() {console.log('saved rec')});
+        camper.save(function(err) {
+          if (err) {
+            if(err.name === 'ValidationError')
+            {
+              dealWithError(err, camper, rec, res);
+            }
+            else {
+              throw (err);
+            }
+          }
+          else {
+            console.log('saved camper')
+            rec.save(function(err) {
+              if (err) { throw err; }
+              console.log('saved rec')
+              // Call the assign page back
+              exports.assign(req, res);
+            });
+          }
+        });
 
-        // Call the assign page back
-        exports.assign(req, res);
+
       });
   });
 };

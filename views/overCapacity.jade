@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  script(src='/javascripts/overCapacity.js')
+  h1= title
+
+  - var camperName = camper.name[0]
+  ul
+    li Rec: #{rec.name}
+    li Capacity: #{rec.capacity}
+    li Number of campers if #{camperName.firstName} joins: #{rec.people.length}
+    li Camper: #{camperName.firstName} #{camperName.lastName}
+
+  #buttons
+    .button#add Yes, override max and add #{camperName.firstName} to #{rec.name}
+    .button#reject No, pick another rec for #{camperName.firstName}

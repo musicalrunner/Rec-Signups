@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  script(src='/javascripts/scheduleConflict.js')
+  h1= title
+
+  ul
+    li New Rec: #{newRec.name} (#{newRec.recBlock} rec)
+    li Old Rec: #{existingRec.name} (#{existingRec.recBlock} rec)
+    li Camper: #{camper.name[0].firstName} #{camper.name[0].lastName}
+
+  #buttons
+    .button#overwrite Change #{camper.name[0].firstName}'s rec to #{newRec.name}
+    .button#abort Keep #{camper.name[0].firstName}'s rec as #{existingRec.name}
