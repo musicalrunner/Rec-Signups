@@ -58,62 +58,64 @@ $('document').ready(function() {
   }); 
 
 
-// Functions
+  // Functions
 
-// Click handler for rec block buttons
-var recBlockClicked = function(recBlock) {
-  recAssignment['recBlock'] = recBlock;
-  $recBlockButtons.detach();
-  $cabinButtons.appendTo('#buttons');
-};
+  // Click handler for rec block buttons
+  var recBlockClicked = function(recBlock) {
+    recAssignment['recBlock'] = recBlock;
+    $recBlockButtons.detach();
+    $cabinButtons.appendTo('#buttons');
+  };
 
-// Click handler for cabin buttons
-var cabinClicked = function(cabin) {
-  recAssignment['cabin'] = cabin;
-  console.log('cabin = ' + cabin);
+  // Click handler for cabin buttons
+  var cabinClicked = function(cabin) {
+    recAssignment['cabin'] = cabin;
+    console.log('cabin = ' + cabin);
 
-  $cabinButtons.detach();
-  $camperButtons[cabin].appendTo('#buttons');
-};
+    $cabinButtons.detach();
+    $camperButtons[cabin].appendTo('#buttons');
+  };
 
-var camperClicked = function(camper) {
-  recAssignment['camper'] = camper;
-  $allCamperButtons.detach();
-  $recButtons[recAssignment['recBlock']].appendTo('#buttons');
-  $recButtons[recAssignment['recBlock']].wrap(function(index) {
-    var toReturn = '<form method="POST" id="';
-    toReturn += $(this).html().replace(' ', '-') + '-form"/>';
-    return toReturn;
-  });
-};
+  // Click handler for camper buttons
+  var camperClicked = function(camper) {
+    recAssignment['camper'] = camper;
+    $allCamperButtons.detach();
+    $recButtons[recAssignment['recBlock']].appendTo('#buttons');
+    $recButtons[recAssignment['recBlock']].wrap(function(index) {
+        var toReturn = '<form method="POST" id="';
+        toReturn += $(this).html().replace(' ', '-') + '-form"/>';
+        return toReturn;
+        });
+  };
 
-var recClicked = function(button) {
-  $allRecButtons.detach();
-  var rec = $(button).html();
-  recAssignment['rec'] = rec;
-  var $form = $('#' + rec.replace(' ', '-') + '-form');
+  // Click handler for rec buttons
+  var recClicked = function(button) {
+    $allRecButtons.detach();
+    var rec = $(button).html();
+    recAssignment['rec'] = rec;
+    var $form = $('#' + rec.replace(' ', '-') + '-form');
 
-  $form.attr('action', '/assign/submit');
-  for(field in recAssignment)
-  {
-    console.log('field = ' + field);
-    console.log('recAssignment[field] = ' + recAssignment[field]);
-    var value = recAssignment[field];
-    var nValue = value.replace(' ', '-');
-    var nField = field.replace(' ', '-');
-    var inputString = '<input type="text" name="' + nField + '"';
-    inputString += ' id="' + nField + '-input" value="' + nValue + '" />';
-    $form.append(inputString);
-    $('#' + nField + '-input').hide();
-  }
+    $form.attr('action', '/assign/submit');
+    for(field in recAssignment)
+    {
+      console.log('field = ' + field);
+      console.log('recAssignment[field] = ' + recAssignment[field]);
+      var value = recAssignment[field];
+      var nValue = value.replace(' ', '-');
+      var nField = field.replace(' ', '-');
+      var inputString = '<input type="text" name="' + nField + '"';
+      inputString += ' id="' + nField + '-input" value="' + nValue + '" />';
+      $form.append(inputString);
+      $('#' + nField + '-input').hide();
+    }
 
-  var weekNumString = '<input type="hidden" name="week"';
-  weekNumString += ' id="weekNumInputID" value="' + $('#weekNumber').html() + '" />';
-  $form.append(weekNumString);
+    var weekNumString = '<input type="hidden" name="week"';
+    weekNumString += ' id="weekNumInputID" value="' + $('#weekNumber').html() + '" />';
+    $form.append(weekNumString);
 
-  $form.submit();
+    $form.submit();
 
-};
+  };
 
 });
 
