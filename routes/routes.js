@@ -83,7 +83,7 @@ var CamperModel = mongoose.model('Camper', Camper);
 //
 // Apply validation
 
-CamperModel.schema.path('recs').validate(validateNoScheduleConflict, 'Schedule Conflict');
+//CamperModel.schema.path('recs').validate(validateNoScheduleConflict, 'Schedule Conflict');
 
 /*
  * GET home page.
