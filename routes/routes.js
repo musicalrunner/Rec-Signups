@@ -25,6 +25,9 @@ var cabins = 'Dorr.Smith.Sault.Burns.Towne.Wade.Up Dorm.Down Dorm'.split('.');
 
 var validateNoScheduleConflict = function(recs) {
   // We pop here but push at the end so recs is unaltered
+  if(recs.length === 0) {
+    return true;
+  }
   var newRec = recs[recs.length-1];
   var newDouble = (newRec.recBlock === 'double');
   for(var i = 0; i < recs.length-1; i++)
@@ -83,7 +86,7 @@ var CamperModel = mongoose.model('Camper', Camper);
 //
 // Apply validation
 
-//CamperModel.schema.path('recs').validate(validateNoScheduleConflict, 'Schedule Conflict');
+CamperModel.schema.path('recs').validate(validateNoScheduleConflict, 'Schedule Conflict');
 
 /*
  * GET home page.
