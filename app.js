@@ -4,6 +4,9 @@
  */
 
 var express = require('express')
+  , setup = require('./routes/setup.js')
+  , assignment = require('./routes/assign.js')
+  , view = require('./routes/view.js')
   , routes = require('./routes/routes.js')
   , http = require('http')
   , path = require('path');
@@ -26,22 +29,22 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.get('/', routes.index);
-app.get('/test', routes.test);
-app.get('/setup', routes.setup);
-app.get('/reset', routes.reset);
-app.get('/setup/addCamper', routes.addCamper);
-app.get('/setup/batchAddCamper', routes.batchAddCamper);
-app.post('/setup/addingCamper', routes.addingCamper);
-app.post('/setup/batchAddingCamper', routes.batchAddingCamper);
-app.get('/setup/addRec', routes.addRec);
-app.post('/setup/addingRec', routes.addingRec);
-app.get('/setup/batchAddRec', routes.batchAddRec);
-app.post('/setup/batchAddingRec', routes.batchAddingRec);
-app.get('/assign', routes.assign);
-app.post('/assign/submit', routes.submitAssignment);
-app.get('/attendance', routes.attendance);
-app.get('/cabinList', routes.cabinList);
+app.get('/', setup.index);
+app.get('/test', setup.test);
+app.get('/setup', setup.setup);
+app.get('/reset', setup.reset);
+app.get('/setup/addCamper', setup.addCamper);
+app.get('/setup/batchAddCamper', setup.batchAddCamper);
+app.post('/setup/addingCamper', setup.addingCamper);
+app.post('/setup/batchAddingCamper', setup.batchAddingCamper);
+app.get('/setup/addRec', setup.addRec);
+app.post('/setup/addingRec', setup.addingRec);
+app.get('/setup/batchAddRec', setup.batchAddRec);
+app.post('/setup/batchAddingRec', setup.batchAddingRec);
+app.get('/assign', assignment.assign);
+app.post('/assign/submit', assignment.submitAssignment);
+app.get('/attendance', view.attendance);
+app.get('/cabinList', view.cabinList);
 
 
 http.createServer(app).listen(app.get('port'), function(){

@@ -24,25 +24,27 @@ var cabins = 'Dorr.Smith.Sault.Burns.Towne.Wade.Up Dorm.Down Dorm'.split('.');
 // (functions)
 
 var validateNoScheduleConflict = function(recs) {
-  // We pop here but push at the end so recs is unaltered
+  // There is no conflict if there are no recs
   if(recs.length === 0) {
     return true;
   }
-  var newRec = recs[recs.length-1];
-  var newDouble = (newRec.recBlock === 'double');
-  for(var i = 0; i < recs.length-1; i++)
-  {
-    if(newRec.week === recs[i].week)
+  else {
+    var newRec = recs[recs.length-1];
+    var newDouble = (newRec.recBlock === 'double');
+    for(var i = 0; i < recs.length-1; i++)
     {
-      var sameRecBlock = (newRec.recBlock === recs[i].recBlock);
-      var oldDouble = (recs[i].recBlock === 'double');
-      if(sameRecBlock || newDouble || oldDouble)
+      if(newRec.week === recs[i].week)
       {
-        return false;
+        var sameRecBlock = (newRec.recBlock === recs[i].recBlock);
+        var oldDouble = (recs[i].recBlock === 'double');
+        if(sameRecBlock || newDouble || oldDouble)
+        {
+          return false;
+        }
       }
     }
+    return true;
   }
-  return true;
 };
 
 var validateCapacity = function(recs) {
@@ -101,25 +103,25 @@ exports.index = function(req, res){
 
 exports.test = function(req, res){
 
-  var dude = new PersonModel();
+  var dude = new Person();
   dude.firstName = 'Sam';
   dude.lastName = 'Kohn';
 
-  var rec = new RecModel();
+  var rec = new Rec();
   rec.name = 'Phys Fit';
   rec.capacity = 1;
   rec.recBlock = 'first';
   rec.week = 1;
 
-  var camper = new CamperModel();
+  var camper = new Camper();
   camper.name.push(dude);
   camper.cabin = 'Dorr';
 
-  var dude2 = new PersonModel();
+  var dude2 = new Person();
   dude2.firstName = 'Joe';
   dude2.lastName = 'Schmo';
 
-  var camper2 = new CamperModel();
+  var camper2 = new Camper();
   camper2.name.push(dude2);
   camper2.cabin = 'Dorr';
 
@@ -162,13 +164,13 @@ exports.test = function(req, res){
 
 exports.reset = function(req, res) {
   console.log('resetting db');
-  RecModel.remove({}, function(err) {
+  Rec.remove({}, function(err) {
     if (err) { throw err; }
     console.log('removed recs');
-    CamperModel.remove({}, function(err) {
+    Camper.remove({}, function(err) {
       if (err) { throw err; }
       console.log('removed campers');
-      PersonModel.remove({}, function(err) {
+      Person.remove({}, function(err) {
         if (err) { throw err; }
         console.log('removed people');
         res.render('index', { title : 'Home'});
@@ -187,14 +189,14 @@ exports.setup = function(req, res) {
 exports.addCamper = function(req, res) {
   res.render('addCamper', {
     title : 'Add Camper', 
-    cabins : (new CamperModel()).schema.path('cabin').enumValues,
+    cabins : (new Camper()).schema.path('cabin').enumValues,
   });
 };
 
 exports.batchAddCamper = function(req, res) {
   res.render('batchAddCamper', { 
     title : 'Batch Add Camper', 
-    cabins : (new CamperModel()).schema.path('cabin').enumValues,
+    cabins : (new Camper()).schema.path('cabin').enumValues,
   });
 };
 
@@ -203,11 +205,11 @@ exports.addingCamper = function(req, res) {
   var lastName = req.param('lastName');
   var cabin = req.param('cabin');
 
-  var dude = new PersonModel();
+  var dude = new Person();
   dude.firstName = firstName;
   dude.lastName = lastName;
 
-  var camperDude = new CamperModel();
+  var camperDude = new Camper();
   camperDude.name.push(dude);
   camperDude.cabin = cabin;
 
@@ -222,7 +224,7 @@ exports.addingCamper = function(req, res) {
     console.log('Here is the camper: ' + JSON.stringify(this));
     res.render('addCamper', { 
       title : 'Add Camper', 
-      cabins : (new CamperModel()).schema.path('cabin').enumValues,
+      cabins : (new Camper()).schema.path('cabin').enumValues,
   });
   });
 };
@@ -245,7 +247,7 @@ exports.batchAddingCamper = function(req, res) {
       var x1 = 0;
     }
     else {
-      var person = new PersonModel();
+      var person = new Person();
       person.firstName = splitNames[1];
       person.lastName = splitNames[0];
 
@@ -254,7 +256,7 @@ exports.batchAddingCamper = function(req, res) {
         console.log('Person saved');
       });
 
-      var camper = new CamperModel();
+      var camper = new Camper();
       camper.name.push(person);
       camper.cabin = cabin;
 
@@ -269,7 +271,7 @@ exports.batchAddingCamper = function(req, res) {
 
   res.render('batchAddcamper', {
     title : 'Add Camper',
-    cabins : (new CamperModel()).schema.path('cabin').enumValues,
+    cabins : (new Camper()).schema.path('cabin').enumValues,
   });
 
 }
@@ -277,14 +279,14 @@ exports.batchAddingCamper = function(req, res) {
 exports.addRec = function(req, res) {
   res.render('addRec', {
     title : 'Add Rec',
-    recBlocks : (new RecModel()).schema.path('recBlock').enumValues,
+    recBlocks : (new Rec()).schema.path('recBlock').enumValues,
   });
 };
 
 exports.batchAddRec = function(req, res) {
   res.render('batchAddRec', {
     title : 'Batch Add Rec',
-    recBlocks : (new RecModel()).schema.path('recBlock').enumValues,
+    recBlocks : (new Rec()).schema.path('recBlock').enumValues,
   });
 };
 
@@ -294,7 +296,7 @@ exports.addingRec = function(req, res) {
   var recRecBlock = req.param('recBlock');
   var weekNum = req.param('weekNum');
 
-  var rec = new RecModel();
+  var rec = new Rec();
   rec.name = recName;
   rec.capacity = recCapacity;
   rec.recBlock = recRecBlock;
@@ -306,7 +308,7 @@ exports.addingRec = function(req, res) {
   });
   res.render('addRec', {
     title : 'Add Rec',
-    recBlocks : (new RecModel()).schema.path('recBlock').enumValues,
+    recBlocks : (new Rec()).schema.path('recBlock').enumValues,
   });
 };
 
@@ -339,7 +341,7 @@ exports.batchAddingRec = function(req, res) {
     {
       recBlocks.forEach( function(block) {
         weeks.forEach( function(week) {
-          var rec = new RecModel();
+          var rec = new Rec();
           rec.name = splitRecLine[0];
           rec.capacity = splitRecLine[1];
           rec.recBlock = block;
@@ -357,7 +359,7 @@ exports.batchAddingRec = function(req, res) {
 
   res.render('batchAddRec', {
     title : 'Add Rec',
-    recBlocks : (new RecModel()).schema.path('recBlock').enumValues,
+    recBlocks : (new Rec()).schema.path('recBlock').enumValues,
   });
 
 };
@@ -366,14 +368,14 @@ exports.batchAddingRec = function(req, res) {
 exports.assign = function(req, res) {
   var weekNumber = req.param('week');
   // Get the Campers
-  CamperModel.find().select('name cabin').exec(function(err) {
+  Camper.find().select('name cabin').exec(function(err) {
     if (err) { throw err; }
 
     var campersByCabin = getCampersByCabin(this)['names'];
     console.log(JSON.stringify(campersByCabin));
 
     // Get the recs
-    RecModel.find({'week' : weekNumber})
+    Rec.find({'week' : weekNumber})
       .select('name recBlock week')
       .exec(function(err) {
       if (err) { throw err; }
@@ -385,8 +387,8 @@ exports.assign = function(req, res) {
       // Render the page
       res.render('assign', {
         title : 'Assign Recs',
-        recBlocks : (new RecModel()).schema.path('recBlock').enumValues,
-        cabins : (new CamperModel()).schema.path('cabin').enumValues,
+        recBlocks : (new Rec()).schema.path('recBlock').enumValues,
+        cabins : (new Camper()).schema.path('cabin').enumValues,
         campers : campersByCabin,
         recs : recsByRecBlock,
         weekNum : weekNumber,
@@ -455,7 +457,7 @@ exports.submitAssignment = function(req, res) {
   console.log('assignment = ' + JSON.stringify(assignment));
 
   // Find the camper entry
-  CamperModel.findOne( {
+  Camper.findOne( {
     "name.firstName" : assignment['camperFirstName'],
     'name.lastName' : assignment['camperLastName'],
     },
@@ -463,7 +465,7 @@ exports.submitAssignment = function(req, res) {
       if (err) { throw err; }
       console.log('found camper ' + JSON.stringify(camper));
       // Find the rec entry
-      RecModel.findOne( {
+      Rec.findOne( {
         name : assignment['recName'].replace('-',' '),
         recBlock : assignment['recBlock'],
         week : assignment['weekNum'],
@@ -519,13 +521,14 @@ exports.submitAssignment = function(req, res) {
 };
 
 
+
 var getCampersByCabin = function(resultOfQuery) {
   var people = resultOfQuery['emitted']['complete'][0];
   var campersByCabin = {
       campers : {},
       names : {},
     };
-  var cabins = (new CamperModel()).schema.path('cabin').enumValues;
+  var cabins = (new Camper()).schema.path('cabin').enumValues;
 
   for(var i = 0; i < cabins.length; i++)
   {
@@ -577,7 +580,7 @@ var getRecsByRecBlock = function(resultOfQuery) {
   var recs = resultOfQuery['emitted']['complete'][0];
   console.log('recs = ' + recs);
   var recsByRecBlock = {};
-  var recBlocks= (new RecModel()).schema.path('recBlock').enumValues;
+  var recBlocks= (new Rec()).schema.path('recBlock').enumValues;
   console.log('recBlocks = ' + recBlocks);
   console.log('recBlocks.length = ' + recBlocks.length);
 
@@ -598,7 +601,7 @@ var getRecsByRecBlock = function(resultOfQuery) {
 };
 
 exports.attendance = function(req, res) {
-  RecModel.find({'week':req.param('week')}).select('name people recBlock').exec(function (err) {
+  Rec.find({'week':req.param('week')}).select('name people recBlock').exec(function (err) {
     var campersByRec = getCampersByRec(this);
 
     res.render('attendance', {
@@ -620,5 +623,4 @@ exports.cabinList = function(req, res) {
     });
   });
 };
-
 
