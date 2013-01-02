@@ -123,22 +123,22 @@ exports.test = function(req, res){
   dude.save( function(err) {
     if (err) { throw err; }
     console.log('Dude saved');
+    camper.save( function(err) {
+      if (err) { throw err; }
+      console.log('Camper saved');
+    });
   });
   dude2.save( function(err) {
     if (err) { throw err; }
     console.log('Dude saved');
+    camper2.save( function(err) {
+      if (err) { throw err; }
+      console.log('Camper saved');
+    });
   });
   rec.save( function(err) {
     if (err) { throw err; }
     console.log('Rec saved');
-  });
-  camper.save( function(err) {
-    if (err) { throw err; }
-    console.log('Camper saved');
-  });
-  camper2.save( function(err) {
-    if (err) { throw err; }
-    console.log('Camper saved');
   });
 
 /*
