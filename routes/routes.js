@@ -10,7 +10,7 @@ else
 {
   url = 'mongodb://localhost:27017/recsignups';
 }
-var db = mongoose.connect(url);
+//var db = mongoose.connect(url);
 var Schema = mongoose.Schema;
 
 // Schemas
