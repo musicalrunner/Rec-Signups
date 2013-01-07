@@ -7,7 +7,7 @@ var express = require('express')
   , setup = require('./routes/setup.js')
   , assignment = require('./routes/assign.js')
   , view = require('./routes/view.js')
-  , routes = require('./routes/routes.js')
+  //, routes = require('./routes/routes.js')
   , http = require('http')
   , path = require('path');
 
