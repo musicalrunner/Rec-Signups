@@ -16,10 +16,10 @@ block content
     .button#reject No, pick another rec for #{camperName.firstName}
 
 
-  form(action='/assign/submit', method='POST')
+  form(id='assignment', action='/assign/overwrite', method='POST')
     - var camperHyphenName = camperName.firstName + '-' + camperName.lastName
     input(type='hidden', name='camper', value=camperHyphenName)
     input(type='hidden', name='recBlock', value=rec.recBlock)
     input(type='hidden', name='rec', value=rec.name)
     input(type='hidden', name='week', value=rec.week)
-    input(type='hidden', name='override', value='yes')
+    input(type='hidden', name='overrideCapacity', value='yes')

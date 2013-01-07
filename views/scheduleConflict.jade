@@ -4,11 +4,22 @@ block content
   script(src='/javascripts/scheduleConflict.js')
   h1= title
 
+  - var camperName = camper.name[0]
   ul
     li New Rec: #{newRec.name} (#{newRec.recBlock} rec)
     li Old Rec: #{existingRec.name} (#{existingRec.recBlock} rec)
-    li Camper: #{camper.name[0].firstName} #{camper.name[0].lastName}
+    li Camper: #{camperName.firstName} #{camperName.lastName}
 
   #buttons
-    .button#overwrite Change #{camper.name[0].firstName}'s rec to #{newRec.name}
-    .button#abort Keep #{camper.name[0].firstName}'s rec as #{existingRec.name}
+    .button#overwrite Change #{camperName.firstName}'s rec to #{newRec.name}
+    .button#abort Keep #{camperName.firstName}'s rec as #{existingRec.name}
+
+
+  // Hidden form to hold the rec assignment information for the
+  // NEW assignment that would overwrite the old one
+  form(id='assignment', action='/assign/overwrite', method='POST')
+    - var camperHyphenName = camperName.firstName + '-' + camperName.lastName
+    input(type='hidden', name='camper', value=camperHyphenName)
+    input(type='hidden', name='recBlock', value=newRec.recBlock)
+    input(type='hidden', name='rec', value=newRec.name)
+    input(type='hidden', name='week', value=newRec.week)

@@ -18,11 +18,17 @@ exports.test = function(req, res){
   dude.firstName = 'Sam';
   dude.lastName = 'Kohn';
 
-  var rec = new Rec();
-  rec.name = 'Phys Fit';
-  rec.capacity = 1;
-  rec.recBlock = 'first';
-  rec.week = 1;
+  var rec1 = new Rec();
+  rec1.name = 'Phys Fit';
+  rec1.capacity = 9;
+  rec1.recBlock = 'first';
+  rec1.week = 1;
+
+  var rec2 = new Rec();
+  rec2.name = 'Kayaking';
+  rec2.capacity = 9;
+  rec2.recBlock = 'first';
+  rec2.week = 1;
 
   var camper = new Camper();
   camper.name.push(dude);
@@ -52,7 +58,11 @@ exports.test = function(req, res){
       console.log('Camper saved');
     });
   });
-  rec.save( function(err) {
+  rec1.save( function(err) {
+    if (err) { throw err; }
+    console.log('Rec saved');
+  });
+  rec2.save( function(err) {
     if (err) { throw err; }
     console.log('Rec saved');
   });

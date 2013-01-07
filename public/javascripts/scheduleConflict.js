@@ -2,12 +2,11 @@ $('document').ready( function() {
 
 
   // If the reject button is clicked, go back to assignments
-  $('#reject').wrap('<a href="/assign?week=' + localStorage.getItem('weekNum') + '" />');
+  $('#abort').wrap('<a href="/assign?week=' + localStorage.getItem('weekNum') + '" />');
 
 
   // Click handler for "force add"
-  var addClicked = function() {
-    alert('clicked');
+  var overwrite = function() {
 
     $form = $('#assignment');
     // Fix the rec name by replacing spaces with hyphens
@@ -19,6 +18,6 @@ $('document').ready( function() {
   };
 
   // If the add button is clicked, submit the assignment
-  $('#add').click(addClicked);
+  $('#overwrite').click(overwrite);
 
 });
