@@ -39,7 +39,7 @@ exports.assign = function(req, res) {
   });
 };
 
-var dealWithError = function(err, camper, rec, res) {
+var dealWithError = function(err, camper, rec, req, res) {
   if(err === 'Schedule Conflict')
   {
     // Deal with schedule conflict
@@ -64,12 +64,21 @@ var dealWithError = function(err, camper, rec, res) {
       throw (err);
     }
 
+    
+    // If the camper is already in that rec, alert so and then
+    // re-load the assign page
+    var sameRec = false;
+    if(conflictingRec.name === rec.name) {
+      sameRec = true;
+    }
+
     // Give page with resolution options
     res.render('scheduleConflict', {
       title : 'Schedule Conflict',
       camper : camper,
       newRec : rec,
       existingRec : conflictingRec,
+      isSameRec : sameRec,
     });
   }
   else if(err === 'Rec Over Capacity')
@@ -122,7 +131,7 @@ exports.submitAssignment = function(req, res) {
         console.log('underCapacity = ' + underCapacity);
         if(!underCapacity && !assignment['override']) {
           camper.recs.pop();
-          dealWithError('Rec Over Capacity', camper, rec, res);
+          dealWithError('Rec Over Capacity', camper, rec, req, res);
         }
         else{
 
@@ -136,7 +145,7 @@ exports.submitAssignment = function(req, res) {
             if (err) {
               if(err.name === 'ValidationError')
               {
-                dealWithError(err.errors.recs.type, camper, rec, res);
+                dealWithError(err.errors.recs.type, camper, rec, req, res);
               }
               else {
                 throw (err);
