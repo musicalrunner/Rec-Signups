@@ -7,36 +7,53 @@ var validateCapacity = schemas.validateCapacity;
 var getStuff = require('./getStuff');
 
 exports.assign = function(req, res) {
+
   var weekNumber = req.param('week');
-  // Get the Campers
-  Camper.find().select('name cabin').sort('name').exec(function(err) {
-    if (err) { throw err; }
 
-    var campersByCabin = getStuff.getCampersByCabin(this)['names'];
-    console.log(JSON.stringify(campersByCabin));
+  // caching cabin, camper, and rec names. if there's a change
+  // then send new copies.
+  var sendNewData = req.param('sendNewData');
 
-    // Get the recs
-    Rec.find({'week' : weekNumber})
-      .select('name recBlock week')
-      .sort('name')
-      .exec(function(err) {
+  if(sendNewData) {
+
+    // Get the Campers
+    Camper.find().select('name cabin').sort('name').exec(function(err) {
       if (err) { throw err; }
-    
 
-      var weekNumber = req.param('week');
-      var recsByRecBlock = getStuff.getRecsByRecBlock(this, weekNumber);
+      var campersByCabin = getStuff.getCampersByCabin(this)['names'];
+      console.log(JSON.stringify(campersByCabin));
 
-      // Render the page
-      res.render('assign', {
-        title : 'Assign Recs',
-        recBlocks : (new Rec()).schema.path('recBlock').enumValues,
-        cabins : (new Camper()).schema.path('cabin').enumValues,
-        campers : campersByCabin,
-        recs : recsByRecBlock,
-        weekNum : weekNumber,
+      // Get the recs
+      Rec.find({'week' : weekNumber})
+        .select('name recBlock week')
+        .sort('name')
+        .exec(function(err) {
+        if (err) { throw err; }
+      
+
+        var weekNumber = req.param('week');
+        var recsByRecBlock = getStuff.getRecsByRecBlock(this, weekNumber);
+
+        // Render the page
+        res.render('assign', {
+          title : 'Assign Recs',
+          recBlocks : (new Rec()).schema.path('recBlock').enumValues,
+          cabins : (new Camper()).schema.path('cabin').enumValues,
+          campers : campersByCabin,
+          recs : recsByRecBlock,
+          weekNum : weekNumber,
+        });
       });
     });
-  });
+  }
+  else {
+    res.render('assign', {
+      title : 'Assign Recs',
+      useCached : true,
+      weekNum : weekNumber,
+    });
+  }
+
 };
 
 var dealWithError = function(err, camper, rec, req, res) {
