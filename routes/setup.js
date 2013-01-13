@@ -27,7 +27,7 @@ exports.test = function(req, res){
   var rec2 = new Rec();
   rec2.name = 'Kayaking';
   rec2.capacity = 9;
-  rec2.recBlock = 'first';
+  rec2.recBlock = 'second';
   rec2.week = 1;
 
   var camper = new Camper();

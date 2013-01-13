@@ -9,7 +9,7 @@ var getStuff = require('./getStuff');
 exports.assign = function(req, res) {
   var weekNumber = req.param('week');
   // Get the Campers
-  Camper.find().select('name cabin').exec(function(err) {
+  Camper.find().select('name cabin').sort('name').exec(function(err) {
     if (err) { throw err; }
 
     var campersByCabin = getStuff.getCampersByCabin(this)['names'];
@@ -18,6 +18,7 @@ exports.assign = function(req, res) {
     // Get the recs
     Rec.find({'week' : weekNumber})
       .select('name recBlock week')
+      .sort('name')
       .exec(function(err) {
       if (err) { throw err; }
     

@@ -11,7 +11,8 @@ block content
     li Camper: #{camperName.firstName} #{camperName.lastName}
 
   #buttons
-    .button#overwrite Change #{camperName.firstName}'s rec to #{newRec.name}
+    if !isSameRec
+      .button#overwrite Change #{camperName.firstName}'s rec to #{newRec.name}
     .button#abort Keep #{camperName.firstName}'s rec as #{existingRec.name}
 
 
