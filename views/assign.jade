@@ -6,6 +6,7 @@ block content
   h3 Click on the rec period to assign
 
   #buttons
+  //
     // The rec block buttons
     - for(var i = 0; i < recBlocks.length; i++)
       .button.recBlock(id= recBlocks[i]) #{recBlocks[i]}
@@ -24,5 +25,10 @@ block content
      - for(var i = 0; i < recs[recBlock].length; i++)
        .button.rec(class= recBlock, id=recs[recBlock][i].replace(' ','-')) #{recs[recBlock][i]}
 
-  // Invisible div for week number
-  #weekNumber(style='display:none') #{weekNum}
+  // Invisible divs for holding data sent from the server
+  #weekNumber.invisible=weekNum
+  #useCached.invisible=useCached
+  #recBlocks.invisible=JSON.stringify(recBlocks)
+  #cabins.invisible=JSON.stringify(cabins)
+  #campers.invisible=JSON.stringify(campers)
+  #recs.invisible=JSON.stringify(recs)

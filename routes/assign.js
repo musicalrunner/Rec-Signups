@@ -12,7 +12,7 @@ exports.assign = function(req, res) {
 
   // caching cabin, camper, and rec names. if there's a change
   // then send new copies.
-  var sendNewData = req.param('sendNewData');
+  var sendNewData = (req.param('sendNewData') === 'true');
 
   if(sendNewData) {
 
@@ -42,6 +42,7 @@ exports.assign = function(req, res) {
           campers : campersByCabin,
           recs : recsByRecBlock,
           weekNum : weekNumber,
+          useCached : false,
         });
       });
     });
@@ -49,8 +50,12 @@ exports.assign = function(req, res) {
   else {
     res.render('assign', {
       title : 'Assign Recs',
-      useCached : true,
+      recBlocks : [],
+      cabins : [],
+      campers : [],
+      recs : [],
       weekNum : weekNumber,
+      useCached : true,
     });
   }
 
