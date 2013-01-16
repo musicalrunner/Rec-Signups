@@ -20,6 +20,7 @@ exports.assign = function(req, res) {
     Camper.find().select('name cabin').sort('name').exec(function(err) {
       if (err) { throw err; }
 
+      // Get only the names (i.e. not the rec list) of campers, divided by cabin
       var campersByCabin = getStuff.getCampersByCabin(this)['names'];
       console.log(JSON.stringify(campersByCabin));
 
