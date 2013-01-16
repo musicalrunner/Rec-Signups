@@ -41,6 +41,7 @@ app.get('/setup/addRec', setup.addRec);
 app.post('/setup/addingRec', setup.addingRec);
 app.get('/setup/batchAddRec', setup.batchAddRec);
 app.post('/setup/batchAddingRec', setup.batchAddingRec);
+app.get('/setup/removeCamper', setup.removeCamper);
 app.get('/assign', assignment.assign);
 app.post('/assign/submit', assignment.submitAssignment);
 app.post('/assign/overwrite', assignment.overwriteAssignment);

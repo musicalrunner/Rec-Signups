@@ -3,6 +3,7 @@ var Person = schemas.Person;
 var Rec = schemas.Rec;
 var Camper = schemas.Camper;
 var CamperEnumVals = schemas.CamperEnumVals;
+var getStuff = require('./getStuff');
 
 
 exports.index = function(req, res){
@@ -283,6 +284,19 @@ exports.batchAddingRec = function(req, res) {
     recBlocks : (new Rec()).schema.path('recBlock').enumValues,
   });
 
+};
+
+exports.removeCamper = function(req, res) {
+  Camper.find().select('name cabin').sort('name').exec(function(err) {
+    if (err) { throw err; }
+
+    // Get the camper names, split up by cabin
+    var campersByCabin = getStuff.getCampersByCabin(this)['names'];
+    res.render('removeCamper', {
+      title : 'Remove Camper',
+      campersByCabin : campersByCabin,
+    });
+  });
 };
 
 

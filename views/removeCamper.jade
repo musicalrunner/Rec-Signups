@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  script(src='/javascripts/removeCamper.js')
+  script(src='/javascripts/updateLocalStorageSetup.js')
+
+  h1=title
+
+  #remove
+    form(name='removeCamper', action='/setup/removingCamper', method='POST', id='removeCamperForm')
+      label(for='cabin') Select Cabin:
+      select(name='cabin', id='cabinID')
+        each list, cabin in campersByCabin
+          option(value=cabin.replace(' ', '-')) #{cabin}
+
+      br
+      label(for='camper') Select Camper:
+      select(name='camper', id='camperID')
+
+    .button#submit Remove
+
+
+  // invisible div for holding campersByCabin
+  #campersByCabin.invisible= JSON.stringify(campersByCabin)
