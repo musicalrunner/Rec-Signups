@@ -152,7 +152,7 @@ exports.addingCamper = function(req, res) {
 
 exports.batchAddingCamper = function(req, res) {
   var camperListText = req.body.campers;
-  var camperList = camperListText.split('\n');
+  var camperList = camperListText.split('\r\n');
 
   var cabin = req.body.cabin;
 
@@ -235,7 +235,7 @@ exports.addingRec = function(req, res) {
 
 exports.batchAddingRec = function(req, res) {
   var recListText = req.body.recs;
-  var recList = recListText.split('\n');
+  var recList = recListText.split('\r\n');
   var recBlocks = req.body.recBlocks;
   var weeks = req.body.weeks;
 
