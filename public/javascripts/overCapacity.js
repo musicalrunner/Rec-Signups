@@ -2,7 +2,7 @@ $('document').ready( function() {
 
 
   // If the reject button is clicked, go back to assignments
-  $('#reject').wrap('<a href="/assign?week=' + localStorage.getItem('weekNum') + '" />');
+  $('#reject').wrap('<a href="/assign?week=' + sessionStorage.getItem('weekNum') + '" />');
 
 
   // Click handler for "force add"

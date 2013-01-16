@@ -1,7 +1,7 @@
 $('document').ready(function() {
 
   // Find out whether to fetch new data from the database or 
-  // from localStorage
+  // from sessionStorage
   var useCached = ($('#useCached').html() === 'true');
 
   var recBlocks = [];
@@ -12,30 +12,30 @@ $('document').ready(function() {
   // Retrive objects and arrays containing the info needed for all
   // of the buttons
   if(useCached) {
-    // Get the items from localStorage
-    recBlocks = JSON.parse(localStorage.getItem('recBlocks'));
-    cabins = JSON.parse(localStorage.getItem('cabins'));
-    campers = JSON.parse(localStorage.getItem('campers'));
-    recs = JSON.parse(localStorage.getItem('recs'));
-    console.log('got data from localStorage');
+    // Get the items from sessionStorage
+    recBlocks = JSON.parse(sessionStorage.getItem('recBlocks'));
+    cabins = JSON.parse(sessionStorage.getItem('cabins'));
+    campers = JSON.parse(sessionStorage.getItem('campers'));
+    recs = JSON.parse(sessionStorage.getItem('recs'));
+    console.log('got data from sessionStorage');
   }
   else {
     // Get the items from the divs and
-    // cache them in localStorage
+    // cache them in sessionStorage
     recBlocks = JSON.parse($('#recBlocks').html());
     cabins = JSON.parse($('#cabins').html());
     campers = JSON.parse($('#campers').html());
     recs = JSON.parse($('#recs').html());
     console.log('got data from server');
 
-    localStorage.setItem('recBlocks', JSON.stringify(recBlocks));
-    localStorage.setItem('cabins', JSON.stringify(cabins));
-    localStorage.setItem('campers', JSON.stringify(campers));
-    localStorage.setItem('recs', JSON.stringify(recs));
-    console.log('saved data to localStorage');
+    sessionStorage.setItem('recBlocks', JSON.stringify(recBlocks));
+    sessionStorage.setItem('cabins', JSON.stringify(cabins));
+    sessionStorage.setItem('campers', JSON.stringify(campers));
+    sessionStorage.setItem('recs', JSON.stringify(recs));
+    console.log('saved data to sessionStorage');
     
     // Save the fact that there is cached data
-    localStorage.setItem('useCached', true);
+    sessionStorage.setItem('useCached', true);
     console.log('set useCached to true');
   }
 
@@ -104,13 +104,13 @@ $('document').ready(function() {
 
   // Save this data locally
   /*
-  if(localStorage) {
-    localStorage.setItem('camperButtons', JSON.stringify($camperButtons));
-    localStorage.setItem('recBlockButtons', JSON.stringify($recBlockButtons));
-    localStorage.setItem('cabinButtons', JSON.stringify($cabinButtons));
-    localStorage.setItem('recButtons', JSON.stringify($recButtons));
-    localStorage.setItem('allRecButtons', JSON.stringify($allRecButtons));
-    localStorage.setItem('allCamperButtons', JSON.stringify($allCamperButtons));
+  if(sessionStorage) {
+    sessionStorage.setItem('camperButtons', JSON.stringify($camperButtons));
+    sessionStorage.setItem('recBlockButtons', JSON.stringify($recBlockButtons));
+    sessionStorage.setItem('cabinButtons', JSON.stringify($cabinButtons));
+    sessionStorage.setItem('recButtons', JSON.stringify($recButtons));
+    sessionStorage.setItem('allRecButtons', JSON.stringify($allRecButtons));
+    sessionStorage.setItem('allCamperButtons', JSON.stringify($allCamperButtons));
   }
   */
 
@@ -208,8 +208,8 @@ $('document').ready(function() {
     var needToSendNewDataString = '<input type="hidden" name="useCached"';
     needToSendNewDataString += ' id="useCachedID" value="';
 
-    if(localStorage) {
-      needToSendNewDataString += localStorage.getItem('useCached');
+    if(sessionStorage) {
+      needToSendNewDataString += sessionStorage.getItem('useCached');
     }
     else {
       needToSendNewDataString += 'false';

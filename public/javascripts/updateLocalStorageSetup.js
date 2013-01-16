@@ -2,9 +2,9 @@ $('document').ready( function() {
 
   $('#submit').click( function() {
 
-    if(localStorage) {
+    if(sessionStorage) {
 
-      localStorage.setItem('useCached', false);
+      sessionStorage.setItem('useCached', false);
       //console.log('saved local storage');
 
     }

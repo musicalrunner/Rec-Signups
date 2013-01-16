@@ -1,13 +1,20 @@
 $('document').ready(function() {
-  var weekNum = -1;
-  if (localStorage.getItem('weekNum')) {
-    weekNum = localStorage.getItem('weekNum');
+  var weekNum = 1;
+  if (sessionStorage.getItem('weekNum')) {
+    weekNum = sessionStorage.getItem('weekNum');
     $('#weekID').attr('value', weekNum);
+  }
+  else {
+    sessionStorage.setItem('weekNum', weekNum);
+  }
+
+  if (!sessionStorage.getItem('useCached')) {
+    sessionStorage.setItem('useCached', false);
   }
 
   var useCached = false;
-  if (localStorage.getItem('useCached')) {
-    useCached = localStorage.getItem('useCached');
+  if (sessionStorage.getItem('useCached')) {
+    useCached = sessionStorage.getItem('useCached');
   }
 
   $('.link:not(#assign)').each(function(index, element) {
@@ -18,24 +25,26 @@ $('document').ready(function() {
   $('#assign').wrap('<a href="/assign?week=' + weekNum + '&useCached=' + useCached + '" />');
 
   $('#reset, #test, #setWeek').click( function() {
-    localStorage.setItem('useCached', false);
+    sessionStorage.setItem('useCached', false);
     console.log('reset cache');
   });
+
+  $('#weekID').change( function() {
+    $changed = $(this);
+    console.log($changed);
+    weekNum = $changed.val();
+    sessionStorage.setItem('weekNum', weekNum);
+    console.log('set sessionStorage.weekNum to ' + weekNum);
+  });
  
+  /*
   $('#setWeek').click(function() {
     $clicked = $(this);
     weekNum = $('select#weekID').val();
     // save locally to get a default for index page
-    localStorage.setItem('weekNum',weekNum);
+    sessionStorage.setItem('weekNum',weekNum);
+  */
 
-/*
-    // Send to server for use in assigning things
-    console.log('weekNum = ' + weekNum);
-    console.log('this.id() = ' + $clicked.attr('id'));
-    $('#weekForm').attr('action', $clicked.attr('id'));
-    $('#weekForm').submit();
-    */
-  });
 
 
 });
