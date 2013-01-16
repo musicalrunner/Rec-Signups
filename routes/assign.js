@@ -12,9 +12,9 @@ exports.assign = function(req, res) {
 
   // caching cabin, camper, and rec names. if there's a change
   // then send new copies.
-  var sendNewData = (req.param('sendNewData') === 'true');
+  var useCached = (req.param('useCached') === 'true');
 
-  if(sendNewData) {
+  if(!useCached) {
 
     // Get the Campers
     Camper.find().select('name cabin').sort('name').exec(function(err) {

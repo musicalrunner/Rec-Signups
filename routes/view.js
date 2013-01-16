@@ -105,9 +105,7 @@ exports.attendance = function(req, res) {
 exports.cabinList = function(req, res) {
   
   // get the week
-  /* // put all weeks in so no need to specify
-   var week = req.param('week');
-   */
+  var week = req.param('week');
 
   // make a new document
   var doc = new PDF();
@@ -136,24 +134,25 @@ exports.cabinList = function(req, res) {
       doc.fontSize(25);
       doc.text(cabin);
       
-      // Week labels
+      doc.fontSize(12);
 
         
       // variables for adding the campers to a list
       var lineNum = 1;
+      var yInitPos = 150;
       var yPos = 150;
       var bigLineHeight = 40;
       var smallLineHeight = 20;
       var rectYoffset = 5;
       var nameXPos = 80;
+      var xInitPos = 200;
+      var xSkip = 100;
+      
+      yPos += bigLineHeight;
 
-      doc.fontSize(12);
 
       campersByCabin['campers'][cabin].forEach( function(camper, index) {
         
-        // position variales
-        var xInitPos = 200;
-        var xSkip = 100;
 
         // draw a grey rectangle to help split up first and second recs
         doc.fillColor('#DEDEDE');
@@ -189,6 +188,20 @@ exports.cabinList = function(req, res) {
         lineNum++;
         yPos += bigLineHeight;
       });
+      
+      // Week labels
+      var bottomOfPage = yPos;
+      for(var i = 0; i < week; i++) {
+        var xPos = xInitPos + i * xSkip;
+        doc.moveTo(xPos - smallLineHeight, yInitPos);
+        doc.lineTo(xPos - smallLineHeight, bottomOfPage);
+        doc.stroke();
+        doc.text('Week ' + (i + 1), xInitPos + i * xSkip, yInitPos);
+      }
+      xPos += xSkip;
+      doc.moveTo(xPos - smallLineHeight, yInitPos);
+      doc.lineTo(xPos - smallLineHeight, bottomOfPage);
+      doc.stroke();
 
     }
 

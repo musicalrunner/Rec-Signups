@@ -1,0 +1,33 @@
+extends layout
+
+block content
+  script(src = '/javascripts/assign.js')
+  h1 #{title}
+  h3 Click on the rec period to assign
+
+  #buttons
+    // The rec block buttons
+    - for(var i = 0; i < recBlocks.length; i++)
+      .button.recBlock(id= recBlocks[i]) #{recBlocks[i]}
+
+    // The cabin buttons
+    - for(var i = 0; i < cabins.length; i++)
+      .button.cabin(id= cabins[i]) #{cabins[i]}
+
+    // The camper buttons
+    - for(cabin in campers)
+      - for(var i = 0; i < campers[cabin].length; i++)
+        .button.camper(class= cabin) #{campers[cabin][i]}
+
+    // The rec buttons
+    - for(recBlock in recs)
+     - for(var i = 0; i < recs[recBlock].length; i++)
+       .button.rec(class= recBlock, id=recs[recBlock][i].replace(' ','-')) #{recs[recBlock][i]}
+
+  // Invisible divs for holding data sent from the server
+  #weekNumber.invisible=weekNum
+  #useCached.invisible=useCached
+  #recBlocks.invisible=JSON.stringify(recBlocks)
+  #cabins.invisible=JSON.stringify(cabins)
+  #campers.invisible=JSON.stringify(campers)
+  #recs.invisible=JSON.stringify(recs)

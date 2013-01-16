@@ -4,8 +4,8 @@ $('document').ready( function() {
 
     if(localStorage) {
 
-      localStorage.setItem('newData', true);
-      console.log('saved local storage');
+      localStorage.setItem('useCached', false);
+      //console.log('saved local storage');
 
     }
 

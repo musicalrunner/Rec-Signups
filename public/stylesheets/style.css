@@ -13,7 +13,7 @@ form {
 }
 
 .invisible {
-  /*display : none;*/
+  display : none;
 }
 
 .button, .camper, .rec {

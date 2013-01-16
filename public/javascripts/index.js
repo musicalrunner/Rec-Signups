@@ -5,9 +5,21 @@ $('document').ready(function() {
     $('#weekID').attr('value', weekNum);
   }
 
-  $('.link').each(function(index, element) {
+  var useCached = false;
+  if (localStorage.getItem('useCached')) {
+    useCached = localStorage.getItem('useCached');
+  }
+
+  $('.link:not(#assign)').each(function(index, element) {
     $element = $(element);
     $element.wrap('<a href="/' + $element.attr('id') + '?week=' + weekNum + '" />');
+  });
+
+  $('#assign').wrap('<a href="/assign?week=' + weekNum + '&useCached=' + useCached + '" />');
+
+  $('#reset, #test, #setWeek').click( function() {
+    localStorage.setItem('useCached', false);
+    console.log('reset cache');
   });
  
   $('#setWeek').click(function() {

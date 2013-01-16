@@ -2,7 +2,7 @@ $('document').ready(function() {
 
   // Find out whether to fetch new data from the database or 
   // from localStorage
-  var useCached = $('#useCached').html();
+  var useCached = ($('#useCached').html() === 'true');
 
   var recBlocks = [];
   var cabins = [];
@@ -13,17 +13,30 @@ $('document').ready(function() {
   // of the buttons
   if(useCached) {
     // Get the items from localStorage
-    recBlocks = JSON.parseJSON(localStorage.getItem('recBlocks'));
-    cabins = JSON.parseJSON(localStorage.getItem('cabins'));
-    campers = JSON.parseJSON(localStorage.getItem('campers'));
-    recs = JSON.parseJSON(localStorage.getItem('recs'));
+    recBlocks = JSON.parse(localStorage.getItem('recBlocks'));
+    cabins = JSON.parse(localStorage.getItem('cabins'));
+    campers = JSON.parse(localStorage.getItem('campers'));
+    recs = JSON.parse(localStorage.getItem('recs'));
+    console.log('got data from localStorage');
   }
   else {
-    // Get the items from the divs
-    recBlocks = JSON.parseJSON($('#recBlocks').html());
-    cabins = JSON.parseJSON($('#cabins').html());
-    campers = JSON.parseJSON($('#campers').html());
-    recs = JSON.parseJSON($('#recs').html());
+    // Get the items from the divs and
+    // cache them in localStorage
+    recBlocks = JSON.parse($('#recBlocks').html());
+    cabins = JSON.parse($('#cabins').html());
+    campers = JSON.parse($('#campers').html());
+    recs = JSON.parse($('#recs').html());
+    console.log('got data from server');
+
+    localStorage.setItem('recBlocks', JSON.stringify(recBlocks));
+    localStorage.setItem('cabins', JSON.stringify(cabins));
+    localStorage.setItem('campers', JSON.stringify(campers));
+    localStorage.setItem('recs', JSON.stringify(recs));
+    console.log('saved data to localStorage');
+    
+    // Save the fact that there is cached data
+    localStorage.setItem('useCached', true);
+    console.log('set useCached to true');
   }
 
 
@@ -34,33 +47,33 @@ $('document').ready(function() {
   // Rec Blocks
   recBlocks.forEach( function(recBlock) {
     var element = '<div class="button recBlock"';
-    element += ' id="' + recBlock + '"/>;
+    element += ' id="' + recBlock + '"/>';
     $buttons.append(element);
     var $button = $('#' + recBlock);
     $button.html(recBlock);
   });
   cabins.forEach( function(cabin) {
     var element = '<div class="button cabin"';
-    element += ' id="' + cabin + '"/>;
+    element += ' id="' + cabin.replace(' ', '-') + '"/>';
     $buttons.append(element);
-    var $button = $('#' + cabin);
+    var $button = $('#' + cabin.replace(' ', '-'));
     $button.html(cabin);
   });
   for(cabin in campers) {
     campers[cabin].forEach( function(camper) {
-      var element = '<div class="button camper ' + cabin + '"';
-      element += ' id="' + camper + '-' + cabin + '"/>;
+      var element = '<div class="button camper ' + cabin.replace(' ', '-') + '"';
+      element += ' id="' + camper.replace(' ','-') + '-' + cabin.replace(' ', '-') + '"/>';
       $buttons.append(element);
-      var $button = $('#' + camper + '-' + cabin);
+      var $button = $('#' + camper.replace(' ', '-') + '-' + cabin.replace(' ', '-'));
       $button.html(camper);
     });
   }
   for(recBlock in recs) {
     recs[recBlock].forEach( function(rec) {
       var element = '<div class="button rec ' + recBlock + '"';
-      element += ' id="' + rec + '"/>;
+      element += ' id="' + rec.replace(' ', '-') + '"/>';
       $buttons.append(element);
-      var $button = $('#' + rec);
+      var $button = $('#' + rec.replace(' ', '-'));
       $button.html(rec);
     });
   }
@@ -90,6 +103,7 @@ $('document').ready(function() {
   
 
   // Save this data locally
+  /*
   if(localStorage) {
     localStorage.setItem('camperButtons', JSON.stringify($camperButtons));
     localStorage.setItem('recBlockButtons', JSON.stringify($recBlockButtons));
@@ -98,6 +112,7 @@ $('document').ready(function() {
     localStorage.setItem('allRecButtons', JSON.stringify($allRecButtons));
     localStorage.setItem('allCamperButtons', JSON.stringify($allCamperButtons));
   }
+  */
 
 
   // Detach the cabin, camper and rec buttons from the current view
@@ -190,14 +205,14 @@ $('document').ready(function() {
 
     // add whether there have been any changes since
     // the last assignment submission to the form
-    var needToSendNewDataString = '<input type="hidden" name="sendNewData"';
-    needToSendNewDataString += ' id="sendNewDataID" value="';
+    var needToSendNewDataString = '<input type="hidden" name="useCached"';
+    needToSendNewDataString += ' id="useCachedID" value="';
 
     if(localStorage) {
-      needToSendNewDataString += localStorage.getItem('newData');
+      needToSendNewDataString += localStorage.getItem('useCached');
     }
     else {
-      needToSendNewDataString += 'true';
+      needToSendNewDataString += 'false';
     }
     needToSendNewDataString += '" />';
     $form.append(needToSendNewDataString);
