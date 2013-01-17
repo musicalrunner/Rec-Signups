@@ -15,7 +15,14 @@ block content
 
       br
       label(for='camper') Select Camper:
+      //- Populate the list with the first cabin's campers
       select(name='camper', id='camperID')
+        - var keepGoing = true
+        each list, cabin in campersByCabin
+          if keepGoing
+            each camper in list
+              option(value=camper) #{camper}
+            - keepGoing = false
 
     .button#submit Remove
 
