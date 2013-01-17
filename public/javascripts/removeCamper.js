@@ -20,8 +20,7 @@ $('document').ready( function() {
 
     var remove = confirm(alertString);
     console.log(remove);
-    if(remove === true) {
-      console.log('submitting form');
+    if(remove) {
       $('#removeCamperForm').submit();
     }
 
