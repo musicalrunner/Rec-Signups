@@ -299,4 +299,77 @@ exports.removeCamper = function(req, res) {
   });
 };
 
+exports.removingCamper = function(req, res) {
+  var camperName = req.body.camper.split(' ');
+  var cabin = req.body.cabin.replace('-', ' ');
+
+  // first find the camper
+  Camper.find({
+     'name.firstName' : camperName[0],
+     'name.lastName' : camperName[1],
+     'cabin' : cabin,
+    },
+    function(err, campers) {
+      if (err) { throw err; }
+      console.log('found ' + campers.length + ' campers:' + JSON.stringify(campers));
+      if(campers.length === 0) {
+        res.render('removedCamperError', {
+          title : 'No Matching Camper Found',
+        });
+      }
+      else if(campers.length > 1) {
+        res.render('removedCamperError', {
+          title : 'More than 1 Matching Camper Found',
+        });
+      }
+      else { // if campers.length === 1
+
+        // remove the camper from the Camper db collection
+        Camper.findOneAndRemove(campers[0], function(err, removed) {
+
+          // next remove the camper from all of the recs he was in
+
+          removed.recs.forEach(function(rec) {
+
+            // find each rec
+            Rec.findOne({
+              name : rec.name,
+              recBlock : rec.recBlock,
+            },
+            function(err, foundRec) {
+              if (err) { throw err; }
+              console.log('found rec ' + rec.name);
+
+              // remove one instance of the camper's name
+              // this allows for multiple campers with the
+              // same name.
+              foundRec.people.some(function(name, index) {
+                if(name.firstName === removed.name[0].firstName) {
+                  if(name.lastName === removed.name[0].lastName) {
+                    foundRec.people.splice(index, 1);
+                    
+                    // save the updated rec
+                    foundRec.save(function(err) {
+                      if (err) { throw err; }
+                      console.log('saved rec, which looks like ' + JSON.stringify(this));
+                    });
+                  }
+                }
+              });
+            });
+          });
+
+
+          res.render('removedCamper', {
+            title : 'Removed Camper',
+            camper : removed,
+          });
+        });
+
+      }
+  });
+
+
+};
+
 

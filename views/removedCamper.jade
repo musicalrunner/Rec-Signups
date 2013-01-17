@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  script(src='/javascripts/removedCamper.js')
+  script(src='/javascripts/updateLocalStorageSetup.js')
+
+  h1=title
+
+  p You just removed the following camper:
+  ul
+    li Name : #{camper.name[0].firstName} #{camper.name[0].lastName}
+    li Cabin : #{camper.cabin}
+
+  p To undo this removal, click the Undo button below.
+
+  .button#undo Undo
+
+  // invisible div for holding the removed camper's info in case of an undo
+  #removedCamper.invisible= JSON.stringify(camper)
