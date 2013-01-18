@@ -4,6 +4,7 @@ var Rec = schemas.Rec;
 var Camper = schemas.Camper;
 var CamperEnumVals = schemas.CamperEnumVals;
 var getStuff = require('./getStuff');
+var submit = require('./assign').assignSubmit;
 
 
 exports.index = function(req, res){
@@ -374,6 +375,54 @@ exports.removingCamper = function(req, res) {
   });
 
 
+};
+
+exports.undoRemove = function(req, res) {
+  var camper = JSON.parse(req.body.camper);
+  var recsToAssign = camper.recs;
+  console.log('the camper to undo is ' + JSON.stringify(camper));
+
+  // Set up the camper
+  var newCamper = new Camper();
+  var newPerson = new Person();
+  newPerson.firstName = camper.name[0].firstName;
+  newPerson.lastName = camper.name[0].lastName;
+
+  newPerson.save( function(err) {
+    if (err) { throw err; }
+    console.log('saved new person');
+
+
+    newCamper.name.push(newPerson);
+    newCamper.cabin = camper.cabin;
+
+    newCamper.save(function(err) {
+      if (err) { throw err; }
+
+
+      recsToAssign.forEach( function(rec) {
+        var assignment = {};
+        assignment['camperFirstName'] = camper.name[0].firstName;
+        assignment['camperLastName'] = camper.name[0].lastName;
+        assignment['cabin'] = camper.cabin;
+        // Always override capacity issues since this person
+        // was already assigned to these recs
+        assignment['override'] = true;
+        assignment['recBlock'] = rec.recBlock;
+        assignment['recName'] = rec.name;
+        assignment['weekNum'] = rec.week;
+
+        submit(null, null, assignment, function() {
+          console.log('submitted re-assignment for ' + JSON.stringify(rec));
+        });
+
+      });
+      
+      res.render('index', {
+        title : 'Home',
+      });
+    });
+  });
 };
 
 

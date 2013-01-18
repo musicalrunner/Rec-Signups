@@ -10,8 +10,9 @@ exports.assignSubmit = function(req, res, assignment, callback) {
 
   // Find the camper entry
   Camper.findOne( {
-    "name.firstName" : assignment['camperFirstName'],
+    'name.firstName' : assignment['camperFirstName'],
     'name.lastName' : assignment['camperLastName'],
+    'cabin' : assignment['cabin'],
     },
     function(err, camper) {
       if (err) { throw err; }
@@ -190,6 +191,7 @@ exports.submitAssignment = function(req, res) {
   assignment['camperFirstName'] = req.param('camper').split('-')[0];
   assignment['camperLastName'] = req.param('camper').split('-')[1];
   assignment['recBlock'] = req.param('recBlock');
+  assignment['cabin'] = req.param('cabin');
   assignment['recName'] = req.param('rec');
   assignment['weekNum'] = req.param('week');
   assignment['override'] = (req.param('overrideCapacity') === 'yes');
