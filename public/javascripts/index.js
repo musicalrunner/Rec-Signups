@@ -19,10 +19,10 @@ $('document').ready(function() {
 
   $('.link:not(#assign)').each(function(index, element) {
     $element = $(element);
-    $element.wrap('<a href="/' + $element.attr('id') + '?week=' + weekNum + '" />');
+    $element.wrap('<a class="week-dependent" href="/' + $element.attr('id') + '?week=' + weekNum + '" />');
   });
 
-  $('#assign').wrap('<a href="/assign?week=' + weekNum + '&useCached=' + useCached + '" />');
+  $('#assign').wrap('<a class="week-dependent" href="/assign?week=' + weekNum + '&useCached=' + useCached + '" />');
 
   $('#reset, #test, #setWeek').click( function() {
     sessionStorage.setItem('useCached', false);
@@ -35,6 +35,12 @@ $('document').ready(function() {
     weekNum = $changed.val();
     sessionStorage.setItem('weekNum', weekNum);
     console.log('set sessionStorage.weekNum to ' + weekNum);
+
+    // also re-set the links
+    $('a.week-dependent').each(function() {
+      this.href = this.href.replace(/week=\d/, 'week=' + weekNum);
+    });
+    
   });
  
   /*
