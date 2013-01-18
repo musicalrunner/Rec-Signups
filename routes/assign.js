@@ -6,6 +6,72 @@ var validateCapacity = schemas.validateCapacity;
 
 var getStuff = require('./getStuff');
 
+exports.assignSubmit = function(req, res, assignment, callback) {
+
+  // Find the camper entry
+  Camper.findOne( {
+    "name.firstName" : assignment['camperFirstName'],
+    'name.lastName' : assignment['camperLastName'],
+    },
+    function(err, camper) {
+      if (err) { throw err; }
+      console.log('found camper ' + JSON.stringify(camper));
+      // Find the rec entry
+      Rec.findOne( {
+        name : assignment['recName'].replace('-',' '),
+        recBlock : assignment['recBlock'],
+        week : assignment['weekNum'],
+      },
+      function(err, rec) {
+        if (err) { throw err; }
+        console.log('found rec ' + JSON.stringify(rec));
+
+        // update the camper
+        camper.recs.push(rec);
+        var underCapacity = validateCapacity(camper.recs);
+        console.log('underCapacity = ' + underCapacity);
+        if(!underCapacity && !assignment['override']) {
+          camper.recs.pop();
+          dealWithError('Rec Over Capacity', camper, rec, req, res);
+        }
+        else{
+
+          // update the rec
+          // do this before saving camper because camper has rec as a subdoc
+          rec.people.push(camper.name[0]);
+          console.log('after rec.people.push\ncamper = ' + JSON.stringify(camper));
+
+          // save the camper
+          camper.save(function(err) {
+            if (err) {
+              if(err.name === 'ValidationError')
+              {
+                dealWithError(err.errors.recs.type, camper, rec, req, res);
+              }
+              else {
+                throw (err);
+              }
+            }
+            else {
+              console.log('saved camper')
+              console.log('camper = ' + JSON.stringify(camper));
+
+
+              // save the rec
+              rec.save(function(err) {
+                if (err) { throw err; }
+                console.log('saved rec')
+                console.log('camper = ' + JSON.stringify(camper));
+                // call the callback!
+                callback(req, res);
+              });
+            }
+          });
+        }
+      });
+    });
+};
+
 exports.assign = function(req, res) {
 
   var weekNumber = req.param('week');
@@ -128,6 +194,11 @@ exports.submitAssignment = function(req, res) {
   assignment['weekNum'] = req.param('week');
   assignment['override'] = (req.param('overrideCapacity') === 'yes');
 
+  exports.assignSubmit(req, res, assignment, function(req, res) {
+    exports.assign(req, res);
+  });
+
+/*
   console.log('assignment = ' + JSON.stringify(assignment));
 
   // Find the camper entry
@@ -192,6 +263,7 @@ exports.submitAssignment = function(req, res) {
         }
       });
     });
+  */
 };
 
 exports.overwriteAssignment = function(req, res) {
