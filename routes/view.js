@@ -146,7 +146,7 @@ exports.cabinList = function(req, res) {
       var rectYoffset = 5;
       var nameXPos = 80;
       var xInitPos = 200;
-      var xSkip = 100;
+      var xSkip = 95;
       
       yPos += bigLineHeight;
 
@@ -156,7 +156,7 @@ exports.cabinList = function(req, res) {
 
         // draw a grey rectangle to help split up first and second recs
         doc.fillColor('#DEDEDE');
-        doc.rect(nameXPos, yPos - rectYoffset, 470, smallLineHeight);
+        doc.rect(nameXPos, yPos - rectYoffset, 480, smallLineHeight);
         doc.fill();
         doc.stroke();
         doc.fillColor('black');
