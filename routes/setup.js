@@ -326,6 +326,10 @@ exports.removingCamper = function(req, res) {
 
         // remove the camper from the Camper db collection
         Camper.findOneAndRemove(campers[0], function(err, removed) {
+          
+          // remove the camper's name from the People db collection
+          // (asynchronously)
+          Person.findOneAndRemove(removed.name[0], function(err, removedPerson) {console.log('removed person ' + JSON.stringify(removedPerson))});
 
           // next remove the camper from all of the recs he was in
 
