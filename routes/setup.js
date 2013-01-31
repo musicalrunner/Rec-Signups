@@ -300,6 +300,19 @@ exports.removeCamper = function(req, res) {
   });
 };
 
+exports.removeRec = function(req, res) {
+  var week = req.query.week;
+  Rec.find({week : week}).select('name recBlock week').sort('recBlock name').exec(function(err) {
+    if (err) { throw err; }
+    var recsByRecBlock = getStuff.getRecsByRecBlock(this);
+    res.render('removeRec', {
+      title : 'Remove Rec',
+      recsByRecBlock : recsByRecBlock,
+    });
+  });
+};
+
+
 exports.removingCamper = function(req, res) {
   var camperName = req.body.camper.split(' ');
   var cabin = req.body.cabin.replace('-', ' ');
@@ -407,13 +420,15 @@ exports.undoRemove = function(req, res) {
         assignment['cabin'] = camper.cabin;
         // Always override capacity issues since this person
         // was already assigned to these recs
+        // There should be no schedule conflicts since all these
+        // recs used to be OK
         assignment['override'] = true;
         assignment['recBlock'] = rec.recBlock;
         assignment['recName'] = rec.name;
         assignment['weekNum'] = rec.week;
 
         submit(null, null, assignment, function() {
-          console.log('submitted re-assignment for ' + JSON.stringify(rec));
+          console.log('submitted re-assignment for the rec ' + JSON.stringify(rec));
         });
 
       });

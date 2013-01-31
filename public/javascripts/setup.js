@@ -1,9 +1,10 @@
 $('document').ready(function() {
 
   $('.link').each(function(index, element) {
-    $element = $(element);
-    $element.wrap('<a href="/setup/' + $element.attr('id') + '" />');
-    console.log('wrapped <a href="/setup/' + $element.attr('id') + '" />');
+    var $element = $(element);
+    var week = sessionStorage.getItem('weekNum');
+    $element.wrap('<a href="/setup/' + $element.attr('id') + '?week=' + week + '" />');
+    console.log('wrapped <a href="/setup/' + $element.attr('id') + '?week=' + week + '" />');
   });
 
   /*

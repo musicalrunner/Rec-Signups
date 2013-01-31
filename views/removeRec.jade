@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  script(src='/javascripts/removeRec.js')
+  script(src='/javascripts/updateLocalStorageSetup.js')
+
+  h1=title
+
+  #remove
+    form(name='removeRec', action='/setup/removingRec', method='POST', id='removeRecForm')
+      label(for='recBlock') Select Rec Block:
+      select(name='recBlock', id='recBlockID')
+        each list, recBlock in recsByRecBlock
+          option(value=recBlock.replace(' ', '-')) #{recBlock}
+
+      br
+      label(for='rec') Select Rec:
+      //- Populate the list with the first recBlock's recs
+      select(name='rec', id='recID')
+        - var keepGoing = true
+        each list, recBlock in recsByRecBlock
+          if keepGoing
+            each rec in list
+              option(value=rec) #{rec}
+            - keepGoing = false
+
+    .button#submit Remove
+
+
+  // invisible div for holding recsByRecBlock
+  #recsByRecBlock.invisible= JSON.stringify(recsByRecBlock)
