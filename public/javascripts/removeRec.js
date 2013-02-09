@@ -4,7 +4,7 @@ $('document').ready( function() {
   var $recBlock = $('#recBlockID');
   var $submit = $('#submit');
   console.log($('#recsByRecBlock').html());
-  var campersByCabin = JSON.parse($('#recsByRecBlock').html());
+  var recsByRecBlock= JSON.parse($('#recsByRecBlock').html());
 
 
   $recBlock.change(function() {
@@ -17,7 +17,7 @@ $('document').ready( function() {
   $submit.click(function() {
     var alertString = 'Click OK to actually remove the following rec from camp. Forever.\n\n';
     var week = recsByRecBlock[$recBlock.val().replace(' ', '-')]; // finish this!
-    alertString += $rec.val() + ', during ' + $recBlock.val() + ' rec, week ' + ;
+    alertString += $rec.val() + ', during ' + $recBlock.val() + ' rec, week ' + week;
 
     var remove = confirm(alertString);
     console.log(remove);

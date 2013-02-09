@@ -41,6 +41,7 @@ app.get('/setup/addRec', setup.addRec);
 app.post('/setup/addingRec', setup.addingRec);
 app.get('/setup/batchAddRec', setup.batchAddRec);
 app.post('/setup/batchAddingRec', setup.batchAddingRec);
+app.get('/setup/removeRec', setup.removeRec);
 app.get('/setup/removeCamper', setup.removeCamper);
 app.post('/setup/removingCamper', setup.removingCamper);
 app.post('/setup/undoRemoveCamper', setup.undoRemoveCamper);
