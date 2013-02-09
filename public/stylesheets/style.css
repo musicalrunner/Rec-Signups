@@ -4,7 +4,7 @@ body {
 }
 
 a {
-  color : #00B7FF;
+  color : #000000;
   text-decoration : none;
 }
 
@@ -44,11 +44,21 @@ form {
   overflow : auto;
   position : absolute;
   top : 0;
-  bottom : 0;
+  bottom : 25px;
   left : 0;
   right : 0;
   padding : 32px;
   margin : 32px;
+  margin-bottom : 8px;
+}
+
+#footer {
+  overflow : hidden;
+  position : absolute;
+  bottom : 0;
+  height : 25px;
+  margin : 0px;
+  font-size : 0.9em;
 }
 
 #homeButton {
