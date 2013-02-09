@@ -11,9 +11,9 @@ block setup_content
     li Name: #{rec.name}
     li Rec Block: #{rec.recBlock}
 
-  p To undo this removal, click the Undo button below.
+  //- p To undo this removal, click the Undo button below.
 
-  .button#undo Undo
+  //- .button#undo Undo
 
   // invisible div for holding the removed rec's info in case of an undo
   form#removedRec.invisible(method='POST', action='/setup/undoRemoveRec')
