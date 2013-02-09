@@ -16,5 +16,5 @@ block content
   .button#undo Undo
 
   // invisible div for holding the removed camper's info in case of an undo
-  form#removedCamper.invisible(method='POST', action='/setup/undoRemove')
+  form#removedCamper.invisible(method='POST', action='/setup/undoRemoveCamper')
     input(name='camper', value=JSON.stringify(camper))

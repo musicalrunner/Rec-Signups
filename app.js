@@ -43,7 +43,7 @@ app.get('/setup/batchAddRec', setup.batchAddRec);
 app.post('/setup/batchAddingRec', setup.batchAddingRec);
 app.get('/setup/removeCamper', setup.removeCamper);
 app.post('/setup/removingCamper', setup.removingCamper);
-app.post('/setup/undoRemove', setup.undoRemove);
+app.post('/setup/undoRemoveCamper', setup.undoRemoveCamper);
 app.get('/assign', assignment.assign);
 app.post('/assign/submit', assignment.submitAssignment);
 app.post('/assign/overwrite', assignment.overwriteAssignment);

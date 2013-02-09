@@ -390,7 +390,7 @@ exports.removingCamper = function(req, res) {
 
 };
 
-exports.undoRemove = function(req, res) {
+exports.undoRemoveCamper = function(req, res) {
   var camper = JSON.parse(req.body.camper);
   var recsToAssign = camper.recs;
   console.log('the camper to undo is ' + JSON.stringify(camper));
