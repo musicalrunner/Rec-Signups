@@ -22,7 +22,9 @@ $('document').ready( function() {
     var remove = confirm(alertString);
     console.log(remove);
     if(remove) {
-      $('#removeCamperForm').submit();
+      console.log('about to submit form');
+      $('#removeRecForm').submit();
+      console.log('submitted form');
     }
 
   });

@@ -1,0 +1,20 @@
+extends setupLayoutt
+
+block setup_content
+  script(src='/javascripts/removedRec.js')
+  script(src='/javascripts/updateLocalStorageSetup.js')
+
+  h1=title
+
+  p You just removed the following rec:
+  ul
+    li Name: #{rec.name}
+    li Rec Block: #{rec.recBlock}
+
+  p To undo this removal, click the Undo button below.
+
+  .button#undo Undo
+
+  // invisible div for holding the removed rec's info in case of an undo
+  form#removedRec.invisible(method='POST', action='/setup/undoRemoveRec')
+    input(name='rec', value=JSON.stringify(rec))

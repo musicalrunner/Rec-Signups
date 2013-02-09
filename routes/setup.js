@@ -390,6 +390,80 @@ exports.removingCamper = function(req, res) {
 
 };
 
+exports.removingRec = function(req, res) {
+  var recName = req.body.rec;
+  var recBlock = req.body.recBlock;
+
+  // first find the rec
+  Rec.find({
+     'name' : recName,
+     'recBlock' : recBlock,
+    },
+    function(err, recs) {
+      if (err) { throw err; }
+      console.log('found ' + recs.length + ' recs:' + JSON.stringify(recs));
+      if(recs.length === 0) {
+        res.render('removedRecError', {
+          title : 'No Matching Rec Found',
+        });
+      }
+      else if(recs.length > 1) {
+        res.render('removedRecError', {
+          title : 'More than 1 Matching Rec Found',
+        });
+      }
+      else { // if recs.length === 1
+
+        // remove the rec from the Rec db collection
+        Rec.findOneAndRemove(recs[0], function(err, removed) {
+          
+          // next remove the rec from all of the campers who signed up for it
+          /*
+
+          removed.recs.forEach(function(rec) {
+
+            // find each rec
+            Rec.findOne({
+              name : rec.name,
+              recBlock : rec.recBlock,
+            },
+            function(err, foundRec) {
+              if (err) { throw err; }
+              console.log('found rec ' + rec.name);
+
+              // remove one instance of the camper's name
+              // this allows for multiple campers with the
+              // same name.
+              foundRec.people.some(function(name, index) {
+                if(name.firstName === removed.name[0].firstName) {
+                  if(name.lastName === removed.name[0].lastName) {
+                    foundRec.people.splice(index, 1);
+                    
+                    // save the updated rec
+                    foundRec.save(function(err) {
+                      if (err) { throw err; }
+                      console.log('saved rec, which looks like ' + JSON.stringify(this));
+                    });
+                  }
+                }
+              });
+            });
+          });
+          */
+
+
+          res.render('removedRec', {
+            title : 'Removed Rec',
+            rec : removed,
+          });
+        });
+
+      }
+  });
+
+
+};
+
 exports.undoRemoveCamper = function(req, res) {
   var camper = JSON.parse(req.body.camper);
   var recsToAssign = camper.recs;
