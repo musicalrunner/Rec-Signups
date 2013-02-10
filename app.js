@@ -30,9 +30,9 @@ app.configure('development', function(){
 });
 
 app.get('/', setup.index);
-app.get('/test', setup.test);
 app.get('/setup', setup.setup);
-app.get('/reset', setup.reset);
+app.get('/setup/test', setup.test);
+app.get('/setup/reset', setup.reset);
 app.get('/setup/addCamper', setup.addCamper);
 app.get('/setup/batchAddCamper', setup.batchAddCamper);
 app.post('/setup/addingCamper', setup.addingCamper);

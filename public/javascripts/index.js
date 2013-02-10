@@ -17,17 +17,30 @@ $('document').ready(function() {
     useCached = sessionStorage.getItem('useCached');
   }
 
-  $('.link:not(#assign)').each(function(index, element) {
+  $('.link').not('#assign').each(function(index, element) {
     $element = $(element);
     $element.wrap('<a class="week-dependent" href="/' + $element.attr('id') + '?week=' + weekNum + '" />');
   });
 
   $('#assign').wrap('<a class="week-dependent" href="/assign?week=' + weekNum + '&useCached=' + useCached + '" />');
 
+  /*
+  $('#reset').click( function() {
+    var confirmed = confirm('are you sure?');
+    if(confirmed) {
+      console.log('reseting')
+    }
+    else
+    {
+      return false;
+    }
+  });
+
   $('#reset, #test, #setWeek').click( function() {
     sessionStorage.setItem('useCached', false);
     console.log('reset cache');
   });
+  */
 
   $('#weekID').change( function() {
     $changed = $(this);
@@ -43,14 +56,4 @@ $('document').ready(function() {
     
   });
  
-  /*
-  $('#setWeek').click(function() {
-    $clicked = $(this);
-    weekNum = $('select#weekID').val();
-    // save locally to get a default for index page
-    sessionStorage.setItem('weekNum',weekNum);
-  */
-
-
-
 });
