@@ -3,17 +3,31 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , setup = require('./routes/setup.js')
-  , assignment = require('./routes/assign.js')
-  , view = require('./routes/view.js')
+var express = require('express'),
+  setup = require('./routes/setup.js'),
+  schemas = require('./routes/schemas.js'),
+  assignment = require('./routes/assign.js'),
+  view = require('./routes/view.js'),
   //, routes = require('./routes/routes.js')
-  , http = require('http')
-  , path = require('path');
+  http = require('http'),
+  path = require('path');
 
+// Create the app
 var app = express();
 
-app.configure(function(){
+// Connect to the mongodb
+if (process.env.MONGOHQ_URL)
+{
+  url = process.env.MONGOHQ_URL;
+}
+else
+{
+  url = 'mongodb://localhost:27017/recsignups';
+}
+var db = schemas.connect(url);
+
+// Set up the app
+app.configure(function() {
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
@@ -25,7 +39,7 @@ app.configure(function(){
   app.use(express.static(path.join(__dirname, 'public')));
 });
 
-app.configure('development', function(){
+app.configure('development', function() {
   app.use(express.errorHandler());
 });
 
@@ -53,6 +67,6 @@ app.get('/attendance', view.attendance);
 app.get('/cabinList', view.cabinList);
 
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
+http.createServer(app).listen(app.get('port'), function() {
+  console.log('Express server listening on port ' + app.get('port'));
 });
