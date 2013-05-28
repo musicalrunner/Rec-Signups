@@ -95,5 +95,6 @@ module.exports = {
   Rec : Rec,
   Camper : Camper,
   validateCapacity : validateCapacity,
+  validateNoScheduleConflict : validateNoScheduleConflict,
   connect : connect,
 };

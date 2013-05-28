@@ -3,6 +3,7 @@ var Camper = schemas.Camper;
 var Rec = schemas.Rec;
 var Person = schemas.Person;
 var validateCapacity = schemas.validateCapacity;
+var validateNoScheduleConflict = schemas.validateNoScheduleConflict;
 
 var getStuff = require('./getStuff');
 
@@ -32,7 +33,13 @@ exports.assignSubmit = function(req, res, assignment, callback) {
       var underCapacity = validateCapacity(rec);
       console.log('underCapacity = ' + underCapacity);
       if (!underCapacity && !assignment['override']) {
-        dealWithError('Rec Over Capacity', camper, rec, req, res);
+        if (!validateNoScheduleConflict(camper.recs.concat(rec)))
+        {
+          dealWithError('Schedule Conflict', camper, rec, req, res);
+        }
+        else {
+          dealWithError('Rec Over Capacity', camper, rec, req, res);
+        }
       }
       else {
         // update the camper
