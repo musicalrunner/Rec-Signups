@@ -1,16 +1,11 @@
 // mongoose stuff
 
 var mongoose = require('mongoose');
-//var db = mongoose.connect('mongodb://localhost:27017/recsignups');
-if(process.env.MONGOHQ_URL)
-{
-  url = process.env.MONGOHQ_URL;
-}
-else
-{
-  url = 'mongodb://localhost:27017/recsignups';
-}
-var db = mongoose.connect(url);
+
+var connect = function(url) {
+  mongoose.connect(url);
+};
+
 var Schema = mongoose.Schema;
 
 // Schemas
@@ -48,14 +43,15 @@ var validateNoScheduleConflict = function(recs) {
 };
 
 /*
+ * The parameter <recs> is the rec mongoose object /before/ the
+ * new camper has been added.
  * NOTE: this is not a mongoose validation function
  * since sometimes we need to override.
  */
-var validateCapacity = function(recs) {
+var validateCapacity = function(rec) {
   console.log('validating capacity');
-  var newRec = recs[recs.length-1];
-  console.log('newRec = ' + JSON.stringify(newRec));
-  if(newRec.people.length + 1 > newRec.capacity) {
+  console.log('rec = ' + JSON.stringify(rec));
+  if(rec.people.length + 1 > rec.capacity) {
     return false;
   }
   else {
@@ -99,4 +95,5 @@ module.exports = {
   Rec : Rec,
   Camper : Camper,
   validateCapacity : validateCapacity,
+  connect : connect,
 };
