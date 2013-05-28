@@ -228,10 +228,10 @@ exports.addingRec = function(req, res) {
   rec.save(function(err) {
     if (err) { throw err; }
     console.log('Rec saved');
-  });
-  res.render('addRec', {
-    title: 'Add Rec',
-    recBlocks: (new Rec()).schema.path('recBlock').enumValues
+    res.render('addRec', {
+      title: 'Add Rec',
+      recBlocks: (new Rec()).schema.path('recBlock').enumValues
+    });
   });
 };
 
@@ -245,6 +245,16 @@ exports.batchAddingRec = function(req, res) {
   if (weeks === 'all')
   {
     weeks = [1, 2, 3, 4];
+  }
+
+  // Resolve recBlocks being not an array if only one box is checked
+  if (!(recBlocks instanceof Array))
+  {
+    recBlocks = [recBlocks];
+  }
+  if (!(weeks instanceof Array))
+  {
+    weeks = [weeks];
   }
 
   console.log('recList = ' + JSON.stringify(recList));
