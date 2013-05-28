@@ -284,14 +284,13 @@ exports.overwriteAssignment = function(req, res) {
         }
       });
 
-      camper.recs.push(rec);
-      var underCapacity = validateCapacity(camper.recs);
+      var underCapacity = validateCapacity(rec);
       console.log('underCapacity = ' + underCapacity);
       if (!underCapacity && !assignment['override']) {
-        camper.recs.pop();
         dealWithError('Rec Over Capacity', camper, rec, res);
       }
       else {
+        camper.recs.push(rec);
 
         // update the rec
         // do this before saving camper because camper has rec as a subdoc
