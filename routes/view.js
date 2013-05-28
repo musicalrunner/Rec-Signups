@@ -41,7 +41,7 @@ exports.attendance = function(req, res) {
         doc.text(recName + ' (' + recBlock + ' rec), week ' + week);
 
         // reset the font size
-        doc.fontSize(12);
+        doc.fontSize(10);
 
 
         var dayOfWeekX = 250;
@@ -109,6 +109,8 @@ exports.cabinList = function(req, res) {
 
   // make a new document
   var doc = new PDF();
+  doc.font('Times-Roman');
+  doc.fontSize(12);
 
   // retrieve all of the campers
   Camper.find().sort({name : 1}).exec(function (err) {
@@ -122,7 +124,21 @@ exports.cabinList = function(req, res) {
     var needToAddPage = false;
 
     for (cabin in campersByCabin['campers']) {
-      
+      // First, sort the cabin list
+      campersByCabin['campers'][cabin].sort(function(a, b) {
+        a = a.name[0].lastName
+        b = b.name[0].lastName
+        if (a < b) {
+          return -1;
+        }
+        else if (a > b) {
+          return 1;
+        }
+        else {
+          return 0;
+        }
+      });
+
       // do the addPage handling
       if(!needToAddPage) {
         needToAddPage = true;
@@ -131,28 +147,32 @@ exports.cabinList = function(req, res) {
         doc.addPage();
       }
 
-      doc.fontSize(25);
-      doc.text(cabin);
-      
-      doc.fontSize(12);
 
-        
       // variables for adding the campers to a list
       var lineNum = 1;
-      var yInitPos = 150;
-      var yPos = 150;
-      var bigLineHeight = 40;
-      var smallLineHeight = 20;
+      var maxNumLines = 16;
+      var yInitPos = 100;
+      var bigLineHeight = 34;
+      var yPos = yInitPos + bigLineHeight;
+      var smallLineHeight = 17;
       var rectYoffset = 5;
       var nameXPos = 80;
       var xInitPos = 200;
       var xSkip = 95;
-      
-      yPos += bigLineHeight;
 
 
+      //console.log(campersByCabin['campers'][cabin]);
       campersByCabin['campers'][cabin].forEach( function(camper, index) {
-        
+
+        // If the page is full, start a new page
+        if (lineNum > maxNumLines)
+        {
+          drawHeader(doc, week, yPos, xInitPos, xSkip, yInitPos);
+          doc.addPage();
+          doc.fontSize(10);
+          yPos = yInitPos + bigLineHeight;
+
+        }
 
         // draw a grey rectangle to help split up first and second recs
         doc.fillColor('#DEDEDE');
@@ -162,7 +182,7 @@ exports.cabinList = function(req, res) {
         doc.fillColor('black');
 
         // write the camper's name label
-        var name = campersByCabin['names'][cabin][index];
+        var name = camper.name[0].firstName + ' ' + camper.name[0].lastName;
         doc.text(name, nameXPos, yPos, {
             width: xInitPos - nameXPos,
             align: 'left',
@@ -193,20 +213,9 @@ exports.cabinList = function(req, res) {
         lineNum++;
         yPos += bigLineHeight;
       });
+
+      drawHeader(doc, week, yPos, xInitPos, xSkip, yInitPos);
       
-      // Week labels
-      var bottomOfPage = yPos;
-      for(var i = 0; i < week; i++) {
-        var xPos = xInitPos + i * xSkip;
-        doc.moveTo(xPos - smallLineHeight, yInitPos);
-        doc.lineTo(xPos - smallLineHeight, bottomOfPage);
-        doc.stroke();
-        doc.text('Week ' + (i + 1), xInitPos + i * xSkip, yInitPos);
-      }
-      xPos += xSkip;
-      doc.moveTo(xPos - smallLineHeight, yInitPos);
-      doc.lineTo(xPos - smallLineHeight, bottomOfPage);
-      doc.stroke();
 
     }
 
@@ -216,13 +225,28 @@ exports.cabinList = function(req, res) {
       res.type('application/pdf');
       res.end(out, 'binary');
     });
-    /*
-    res.render('cabinList', {
-      title : 'Cabin Lists',
-      campersByCabin : campersByCabin,
-    });
-    */
   });
 };
 
+var drawHeader = function(doc, week, bottomOfPage, xInitPos, xSkip, yInitPos) {
 
+  doc.fontSize(25);
+  doc.text(cabin, 72, 72);
+      
+
+  // Week labels
+  doc.fontSize(12);
+  for(var i = 0; i < week; i++) {
+    var xPos = xInitPos + i * xSkip;
+    xPos -= 20; // magic number!
+    doc.moveTo(xPos, yInitPos);
+    doc.lineTo(xPos, bottomOfPage);
+    doc.stroke();
+    doc.text('Week ' + (i + 1), xInitPos + i * xSkip, yInitPos);
+  }
+  xPos += xSkip;
+  doc.moveTo(xPos, yInitPos);
+  doc.lineTo(xPos, bottomOfPage);
+  doc.stroke();
+  doc.fontSize(12);
+};
