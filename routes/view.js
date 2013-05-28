@@ -161,8 +161,13 @@ exports.cabinList = function(req, res) {
         doc.stroke();
         doc.fillColor('black');
 
+        // write the camper's name label
         var name = campersByCabin['names'][cabin][index];
-        doc.text(name, nameXPos, yPos);
+        doc.text(name, nameXPos, yPos, {
+            width: xInitPos - nameXPos,
+            align: 'left',
+            height: bigLineHeight
+        });
 
         // Find this week's recs
         camper.recs.forEach( function(rec) {
