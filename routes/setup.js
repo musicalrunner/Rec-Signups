@@ -192,7 +192,7 @@ exports.batchAddingCamper = function(req, res) {
   });
 
 
-  res.render('batchAddcamper', {
+  res.render('batchAddCamper', {
     title: 'Add Camper',
     cabins: (new Camper()).schema.path('cabin').enumValues
   });
