@@ -7,14 +7,14 @@ var getStuff = require('./getStuff');
 var submit = require('./assign').assignSubmit;
 
 
-exports.index = function(req, res){
+exports.index = function(req, res) {
 
-  res.render('index', { title : 'Home' } );
+  res.render('index', { title: 'Home' });
 
 };
 
 
-exports.test = function(req, res){
+exports.test = function(req, res) {
 
   var dude = new Person();
   dude.firstName = 'Sam';
@@ -44,32 +44,32 @@ exports.test = function(req, res){
   camper2.name.push(dude2);
   camper2.cabin = 'Dorr';
 
-  dude.save( function(err) {
+  dude.save(function(err) {
     if (err) { throw err; }
     console.log('Dude saved');
-    camper.save( function(err) {
+    camper.save(function(err) {
       if (err) { throw err; }
       console.log('Camper saved');
     });
   });
-  dude2.save( function(err) {
+  dude2.save(function(err) {
     if (err) { throw err; }
     console.log('Dude saved');
-    camper2.save( function(err) {
+    camper2.save(function(err) {
       if (err) { throw err; }
       console.log('Camper saved');
     });
   });
-  rec1.save( function(err) {
+  rec1.save(function(err) {
     if (err) { throw err; }
     console.log('Rec saved');
   });
-  rec2.save( function(err) {
+  rec2.save(function(err) {
     if (err) { throw err; }
     console.log('Rec saved');
   });
 
-/*
+  /*
   console.log('Dude:');
   console.log(JSON.stringify(dude));
   console.log('Rec:');
@@ -80,8 +80,8 @@ exports.test = function(req, res){
 
 
 
-  res.render('index', { 
-    title: 'Home', 
+  res.render('index', {
+    title: 'Home'
   });
 };
 
@@ -96,7 +96,7 @@ exports.reset = function(req, res) {
       Person.remove({}, function(err) {
         if (err) { throw err; }
         console.log('removed people');
-        res.render('index', { title : 'Home'});
+        res.render('index', { title: 'Home'});
       });
     });
   });
@@ -105,21 +105,21 @@ exports.reset = function(req, res) {
 
 exports.setup = function(req, res) {
   console.log('getting setup');
-  res.render('setup', { title : 'Setup' });
+  res.render('setup', { title: 'Setup' });
   console.log('got setup');
 };
 
 exports.addCamper = function(req, res) {
   res.render('addCamper', {
-    title : 'Add Camper', 
-    cabins : (new Camper()).schema.path('cabin').enumValues,
+    title: 'Add Camper',
+    cabins: (new Camper()).schema.path('cabin').enumValues
   });
 };
 
 exports.batchAddCamper = function(req, res) {
-  res.render('batchAddCamper', { 
-    title : 'Batch Add Camper', 
-    cabins : (new Camper()).schema.path('cabin').enumValues,
+  res.render('batchAddCamper', {
+    title: 'Batch Add Camper',
+    cabins: (new Camper()).schema.path('cabin').enumValues
   });
 };
 
@@ -136,19 +136,19 @@ exports.addingCamper = function(req, res) {
   camperDude.name.push(dude);
   camperDude.cabin = cabin;
 
-  dude.save( function(err) {
+  dude.save(function(err) {
     if (err) { throw err; }
     console.log('Person saved');
   });
 
-  camperDude.save( function(err) {
+  camperDude.save(function(err) {
     if (err) { throw err; }
     console.log('Camper saved');
     console.log('Here is the camper: ' + JSON.stringify(this));
-    res.render('addCamper', { 
-      title : 'Add Camper', 
-      cabins : (new Camper()).schema.path('cabin').enumValues,
-  });
+    res.render('addCamper', {
+      title: 'Add Camper',
+      cabins: (new Camper()).schema.path('cabin').enumValues
+    });
   });
 };
 
@@ -161,7 +161,7 @@ exports.batchAddingCamper = function(req, res) {
 
   console.log('second entry in camperList is ' + camperList[1]);
 
-  camperList.forEach( function(name) {
+  camperList.forEach(function(name) {
     console.log('name = ' + name);
     var splitNames = name.split(', ');
     console.log('splitNames = ' + splitNames);
@@ -174,7 +174,7 @@ exports.batchAddingCamper = function(req, res) {
       person.firstName = splitNames[1];
       person.lastName = splitNames[0];
 
-      person.save( function(err) {
+      person.save(function(err) {
         if (err) { throw err; }
         console.log('Person saved');
       });
@@ -183,7 +183,7 @@ exports.batchAddingCamper = function(req, res) {
       camper.name.push(person);
       camper.cabin = cabin;
 
-      camper.save( function(err) {
+      camper.save(function(err) {
         if (err) { throw err; }
         console.log('Camper saved');
         console.log('Here is the camper: ' + JSON.stringify(this));
@@ -193,23 +193,23 @@ exports.batchAddingCamper = function(req, res) {
 
 
   res.render('batchAddcamper', {
-    title : 'Add Camper',
-    cabins : (new Camper()).schema.path('cabin').enumValues,
+    title: 'Add Camper',
+    cabins: (new Camper()).schema.path('cabin').enumValues
   });
 
-}
+};
 
 exports.addRec = function(req, res) {
   res.render('addRec', {
-    title : 'Add Rec',
-    recBlocks : (new Rec()).schema.path('recBlock').enumValues,
+    title: 'Add Rec',
+    recBlocks: (new Rec()).schema.path('recBlock').enumValues
   });
 };
 
 exports.batchAddRec = function(req, res) {
   res.render('batchAddRec', {
-    title : 'Batch Add Rec',
-    recBlocks : (new Rec()).schema.path('recBlock').enumValues,
+    title: 'Batch Add Rec',
+    recBlocks: (new Rec()).schema.path('recBlock').enumValues
   });
 };
 
@@ -223,15 +223,15 @@ exports.addingRec = function(req, res) {
   rec.name = recName;
   rec.capacity = recCapacity;
   rec.recBlock = recRecBlock;
-  rec.week= weekNum;
+  rec.week = weekNum;
 
-  rec.save( function(err) {
+  rec.save(function(err) {
     if (err) { throw err; }
     console.log('Rec saved');
   });
   res.render('addRec', {
-    title : 'Add Rec',
-    recBlocks : (new Rec()).schema.path('recBlock').enumValues,
+    title: 'Add Rec',
+    recBlocks: (new Rec()).schema.path('recBlock').enumValues
   });
 };
 
@@ -242,35 +242,35 @@ exports.batchAddingRec = function(req, res) {
   var weeks = req.body.weeks;
 
   // Resolve shorthand for all weeks
-  if(weeks === 'all')
+  if (weeks === 'all')
   {
-    weeks = [1,2,3,4];
+    weeks = [1, 2, 3, 4];
   }
 
   console.log('recList = ' + JSON.stringify(recList));
   console.log('recBlocks = ' + JSON.stringify(recBlocks));
   console.log('weeks = ' + JSON.stringify(weeks));
 
-  recList.forEach( function(recLine, index) {
+  recList.forEach(function(recLine, index) {
     console.log('recLine = ' + recLine);
     var splitRecLine = recLine.split(', ');
     console.log('splitRecLine = ' + splitRecLine);
-    if(splitRecLine.length != 2)
+    if (splitRecLine.length != 2)
     {
       //ERROR!
       var aklsdjf = 0;
     }
     else
     {
-      recBlocks.forEach( function(block) {
-        weeks.forEach( function(week) {
+      recBlocks.forEach(function(block) {
+        weeks.forEach(function(week) {
           var rec = new Rec();
           rec.name = splitRecLine[0];
           rec.capacity = splitRecLine[1];
           rec.recBlock = block;
           rec.week = week;
 
-          rec.save( function(err) {
+          rec.save(function(err) {
             if (err) { throw err; }
             console.log('Rec saved');
             console.log('Here is the rec: ' + JSON.stringify(this));
@@ -281,8 +281,8 @@ exports.batchAddingRec = function(req, res) {
   });
 
   res.render('batchAddRec', {
-    title : 'Add Rec',
-    recBlocks : (new Rec()).schema.path('recBlock').enumValues,
+    title: 'Add Rec',
+    recBlocks: (new Rec()).schema.path('recBlock').enumValues
   });
 
 };
@@ -294,22 +294,23 @@ exports.removeCamper = function(req, res) {
     // Get the camper names, split up by cabin
     var campersByCabin = getStuff.getCampersByCabin(this)['names'];
     res.render('removeCamper', {
-      title : 'Remove Camper',
-      campersByCabin : campersByCabin,
+      title: 'Remove Camper',
+      campersByCabin: campersByCabin
     });
   });
 };
 
 exports.removeRec = function(req, res) {
   var week = req.query.week;
-  Rec.find({week : week}).select('name recBlock week').sort('recBlock name').exec(function(err) {
-    if (err) { throw err; }
-    var recsByRecBlock = getStuff.getRecsByRecBlock(this);
-    res.render('removeRec', {
-      title : 'Remove Rec',
-      recsByRecBlock : recsByRecBlock,
-    });
-  });
+  Rec.find({week: week}).select('name recBlock week').sort('recBlock name').
+      exec(function(err) {
+        if (err) { throw err; }
+        var recsByRecBlock = getStuff.getRecsByRecBlock(this);
+        res.render('removeRec', {
+          title: 'Remove Rec',
+          recsByRecBlock: recsByRecBlock
+        });
+      });
 };
 
 
@@ -319,72 +320,76 @@ exports.removingCamper = function(req, res) {
 
   // first find the camper
   Camper.find({
-     'name.firstName' : camperName[0],
-     'name.lastName' : camperName[1],
-     'cabin' : cabin,
-    },
-    function(err, campers) {
-      if (err) { throw err; }
-      console.log('found ' + campers.length + ' campers:' + JSON.stringify(campers));
-      if(campers.length === 0) {
-        res.render('removedCamperError', {
-          title : 'No Matching Camper Found',
+    'name.firstName' : camperName[0],
+    'name.lastName' : camperName[1],
+    'cabin' : cabin
+  },
+  function(err, campers) {
+    if (err) { throw err; }
+    console.log('found ' + campers.length + ' campers:' +
+        JSON.stringify(campers));
+    if (campers.length === 0) {
+      res.render('removedCamperError', {
+        title: 'No Matching Camper Found'
+      });
+    }
+    else if (campers.length > 1) {
+      res.render('removedCamperError', {
+        title: 'More than 1 Matching Camper Found'
+      });
+    }
+    else { // if campers.length === 1
+
+      // remove the camper from the Camper db collection
+      Camper.findOneAndRemove(campers[0], function(err, removed) {
+
+        // remove the camper's name from the People db collection
+        // (asynchronously)
+        Person.findOneAndRemove(removed.name[0], function(err, removedItem) {
+          console.log('removed person ' + JSON.stringify(removedItem));
         });
-      }
-      else if(campers.length > 1) {
-        res.render('removedCamperError', {
-          title : 'More than 1 Matching Camper Found',
-        });
-      }
-      else { // if campers.length === 1
 
-        // remove the camper from the Camper db collection
-        Camper.findOneAndRemove(campers[0], function(err, removed) {
-          
-          // remove the camper's name from the People db collection
-          // (asynchronously)
-          Person.findOneAndRemove(removed.name[0], function(err, removedPerson) {console.log('removed person ' + JSON.stringify(removedPerson))});
+        // next remove the camper from all of the recs he was in
 
-          // next remove the camper from all of the recs he was in
+        removed.recs.forEach(function(rec) {
 
-          removed.recs.forEach(function(rec) {
+          // find each rec
+          Rec.findOne({
+            name: rec.name,
+            recBlock: rec.recBlock
+          },
+          function(err, foundRec) {
+            if (err) { throw err; }
+            console.log('found rec ' + rec.name);
 
-            // find each rec
-            Rec.findOne({
-              name : rec.name,
-              recBlock : rec.recBlock,
-            },
-            function(err, foundRec) {
-              if (err) { throw err; }
-              console.log('found rec ' + rec.name);
+            // remove one instance of the camper's name
+            // this allows for multiple campers with the
+            // same name.
+            foundRec.people.some(function(name, index) {
+              if (name.firstName === removed.name[0].firstName) {
+                if (name.lastName === removed.name[0].lastName) {
+                  foundRec.people.splice(index, 1);
 
-              // remove one instance of the camper's name
-              // this allows for multiple campers with the
-              // same name.
-              foundRec.people.some(function(name, index) {
-                if(name.firstName === removed.name[0].firstName) {
-                  if(name.lastName === removed.name[0].lastName) {
-                    foundRec.people.splice(index, 1);
-                    
-                    // save the updated rec
-                    foundRec.save(function(err) {
-                      if (err) { throw err; }
-                      console.log('saved rec, which looks like ' + JSON.stringify(this));
-                    });
-                  }
+                  // save the updated rec
+                  foundRec.save(function(err) {
+                    if (err) { throw err; }
+                    console.log('saved rec, which looks like ' +
+                        JSON.stringify(this));
+                  });
                 }
-              });
+              }
             });
           });
-
-
-          res.render('removedCamper', {
-            title : 'Removed Camper',
-            camper : removed,
-          });
         });
 
-      }
+
+        res.render('removedCamper', {
+          title: 'Removed Camper',
+          camper: removed
+        });
+      });
+
+    }
   });
 
 
@@ -396,69 +401,35 @@ exports.removingRec = function(req, res) {
 
   // first find the rec
   Rec.find({
-     'name' : recName,
-     'recBlock' : recBlock,
-    },
-    function(err, recs) {
-      if (err) { throw err; }
-      console.log('found ' + recs.length + ' recs:' + JSON.stringify(recs));
-      if(recs.length === 0) {
-        res.render('removedRecError', {
-          title : 'No Matching Rec Found',
+    'name' : recName,
+    'recBlock' : recBlock
+  },
+  function(err, recs) {
+    if (err) { throw err; }
+    console.log('found ' + recs.length + ' recs:' + JSON.stringify(recs));
+    if (recs.length === 0) {
+      res.render('removedRecError', {
+        title: 'No Matching Rec Found'
+      });
+    }
+    else if (recs.length > 1) {
+      res.render('removedRecError', {
+        title: 'More than 1 Matching Rec Found'
+      });
+    }
+    else { // if recs.length === 1
+
+      // remove the rec from the Rec db collection
+      Rec.findOneAndRemove(recs[0], function(err, removed) {
+
+        // next remove the rec from all of the campers who signed up for it
+        res.render('removedRec', {
+          title: 'Removed Rec',
+          rec: removed
         });
-      }
-      else if(recs.length > 1) {
-        res.render('removedRecError', {
-          title : 'More than 1 Matching Rec Found',
-        });
-      }
-      else { // if recs.length === 1
+      });
 
-        // remove the rec from the Rec db collection
-        Rec.findOneAndRemove(recs[0], function(err, removed) {
-          
-          // next remove the rec from all of the campers who signed up for it
-          /*
-
-          removed.recs.forEach(function(rec) {
-
-            // find each rec
-            Rec.findOne({
-              name : rec.name,
-              recBlock : rec.recBlock,
-            },
-            function(err, foundRec) {
-              if (err) { throw err; }
-              console.log('found rec ' + rec.name);
-
-              // remove one instance of the camper's name
-              // this allows for multiple campers with the
-              // same name.
-              foundRec.people.some(function(name, index) {
-                if(name.firstName === removed.name[0].firstName) {
-                  if(name.lastName === removed.name[0].lastName) {
-                    foundRec.people.splice(index, 1);
-                    
-                    // save the updated rec
-                    foundRec.save(function(err) {
-                      if (err) { throw err; }
-                      console.log('saved rec, which looks like ' + JSON.stringify(this));
-                    });
-                  }
-                }
-              });
-            });
-          });
-          */
-
-
-          res.render('removedRec', {
-            title : 'Removed Rec',
-            rec : removed,
-          });
-        });
-
-      }
+    }
   });
 
 
@@ -475,7 +446,7 @@ exports.undoRemoveCamper = function(req, res) {
   newPerson.firstName = camper.name[0].firstName;
   newPerson.lastName = camper.name[0].lastName;
 
-  newPerson.save( function(err) {
+  newPerson.save(function(err) {
     if (err) { throw err; }
     console.log('saved new person');
 
@@ -487,7 +458,7 @@ exports.undoRemoveCamper = function(req, res) {
       if (err) { throw err; }
 
 
-      recsToAssign.forEach( function(rec) {
+      recsToAssign.forEach(function(rec) {
         var assignment = {};
         assignment['camperFirstName'] = camper.name[0].firstName;
         assignment['camperLastName'] = camper.name[0].lastName;
@@ -502,13 +473,14 @@ exports.undoRemoveCamper = function(req, res) {
         assignment['weekNum'] = rec.week;
 
         submit(null, null, assignment, function() {
-          console.log('submitted re-assignment for the rec ' + JSON.stringify(rec));
+          console.log('submitted re-assignment for the rec ' +
+              JSON.stringify(rec));
         });
 
       });
-      
+
       res.render('index', {
-        title : 'Home',
+        title: 'Home'
       });
     });
   });

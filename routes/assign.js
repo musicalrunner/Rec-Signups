@@ -13,66 +13,66 @@ exports.assignSubmit = function(req, res, assignment, callback) {
     'name.firstName': assignment['camperFirstName'],
     'name.lastName': assignment['camperLastName'],
     'cabin': assignment['cabin']
+  },
+  function(err, camper) {
+    if (err) { throw err; }
+    console.log('found camper ' + JSON.stringify(camper));
+    // Find the rec entry
+    Rec.findOne({
+      name: assignment['recName'].replace('-', ' '),
+      recBlock: assignment['recBlock'],
+      week: assignment['weekNum']
     },
-    function(err, camper) {
+    function(err, rec) {
       if (err) { throw err; }
-      console.log('found camper ' + JSON.stringify(camper));
-      // Find the rec entry
-      Rec.findOne({
-        name: assignment['recName'].replace('-', ' '),
-        recBlock: assignment['recBlock'],
-        week: assignment['weekNum']
-      },
-      function(err, rec) {
-        if (err) { throw err; }
-        console.log('found rec ' + JSON.stringify(rec));
+      console.log('found rec ' + JSON.stringify(rec));
 
-        // Check to see if adding the camper would put the rec
-        // over capacity
-        var underCapacity = validateCapacity(rec);
-        console.log('underCapacity = ' + underCapacity);
-        if (!underCapacity && !assignment['override']) {
-          dealWithError('Rec Over Capacity', camper, rec, req, res);
-        }
-        else {
-          // update the camper
-          camper.recs.push(rec);
+      // Check to see if adding the camper would put the rec
+      // over capacity
+      var underCapacity = validateCapacity(rec);
+      console.log('underCapacity = ' + underCapacity);
+      if (!underCapacity && !assignment['override']) {
+        dealWithError('Rec Over Capacity', camper, rec, req, res);
+      }
+      else {
+        // update the camper
+        camper.recs.push(rec);
 
-          // update the rec
-          // do this before saving camper because camper has rec as a subdoc
-          rec.people.push(camper.name[0]);
-          console.log('after rec.people.push\ncamper = ' +
-              JSON.stringify(camper));
+        // update the rec
+        // do this before saving camper because camper has rec as a subdoc
+        rec.people.push(camper.name[0]);
+        console.log('after rec.people.push\ncamper = ' +
+            JSON.stringify(camper));
 
-          // save the camper
-          camper.save(function(err) {
-            if (err) {
-              if (err.name === 'ValidationError')
-              {
-                dealWithError(err.errors.recs.type, camper, rec, req, res);
-              }
-              else {
-                throw (err);
-              }
+        // save the camper
+        camper.save(function(err) {
+          if (err) {
+            if (err.name === 'ValidationError')
+            {
+              dealWithError(err.errors.recs.type, camper, rec, req, res);
             }
             else {
-              console.log('saved camper');
-              console.log('camper = ' + JSON.stringify(camper));
-
-
-              // save the rec
-              rec.save(function(err) {
-                if (err) { throw err; }
-                console.log('saved rec');
-                console.log('camper = ' + JSON.stringify(camper));
-                // call the callback!
-                callback(req, res);
-              });
+              throw (err);
             }
-          });
-        }
-      });
+          }
+          else {
+            console.log('saved camper');
+            console.log('camper = ' + JSON.stringify(camper));
+
+
+            // save the rec
+            rec.save(function(err) {
+              if (err) { throw err; }
+              console.log('saved rec');
+              console.log('camper = ' + JSON.stringify(camper));
+              // call the callback!
+              callback(req, res);
+            });
+          }
+        });
+      }
     });
+  });
 };
 
 exports.assign = function(req, res) {
@@ -98,22 +98,22 @@ exports.assign = function(req, res) {
         .select('name recBlock week')
         .sort('name')
         .exec(function(err) {
-        if (err) { throw err; }
+            if (err) { throw err; }
 
-        var weekNumber = req.param('week');
-        var recsByRecBlock = getStuff.getRecsByRecBlock(this, weekNumber);
+            var weekNumber = req.param('week');
+            var recsByRecBlock = getStuff.getRecsByRecBlock(this, weekNumber);
 
-        // Render the page
-        res.render('assign', {
-          title: 'Assign Recs',
-          recBlocks: (new Rec()).schema.path('recBlock').enumValues,
-          cabins: (new Camper()).schema.path('cabin').enumValues,
-          campers: campersByCabin,
-          recs: recsByRecBlock,
-          weekNum: weekNumber,
-          useCached: false
-        });
-      });
+            // Render the page
+            res.render('assign', {
+              title: 'Assign Recs',
+              recBlocks: (new Rec()).schema.path('recBlock').enumValues,
+              cabins: (new Camper()).schema.path('cabin').enumValues,
+              campers: campersByCabin,
+              recs: recsByRecBlock,
+              weekNum: weekNumber,
+              useCached: false
+            });
+          });
     });
   }
   else {
@@ -218,114 +218,114 @@ exports.overwriteAssignment = function(req, res) {
   Camper.findOne({
     'name.firstName': assignment['camperFirstName'],
     'name.lastName': assignment['camperLastName']
+  },
+  function(err, camper) {
+    if (err) { throw err; }
+    console.log('found camper ' + JSON.stringify(camper));
+    // Find the rec entry
+    Rec.findOne({
+      name: assignment['recName'].replace('-', ' '),
+      recBlock: assignment['recBlock'],
+      week: assignment['weekNum']
     },
-    function(err, camper) {
+    function(err, rec) {
       if (err) { throw err; }
-      console.log('found camper ' + JSON.stringify(camper));
-      // Find the rec entry
-      Rec.findOne({
-        name: assignment['recName'].replace('-', ' '),
-        recBlock: assignment['recBlock'],
-        week: assignment['weekNum']
-      },
-      function(err, rec) {
-        if (err) { throw err; }
-        console.log('found rec ' + JSON.stringify(rec));
+      console.log('found rec ' + JSON.stringify(rec));
 
-        // update the camper: delete old assignment
+      // update the camper: delete old assignment
 
-        // Find the old assignment
-        camper.recs.forEach(function(testRec, index) {
-          if (rec.week === testRec.week) {
-            var sameRec = rec.recBlock === testRec.recBlock;
-            var newDouble = rec.recBlock === 'double';
-            var oldDouble = testRec.recBlock === 'double';
-            if (sameRec || newDouble || oldDouble) {
-              // Found the old assignment
-              // delete (splice) the rec from the camper's list
-              var removed = camper.recs.splice(index, 1)[0];
-              console.log('removed rec from camper: ' +
-                  JSON.stringify(removed));
+      // Find the old assignment
+      camper.recs.forEach(function(testRec, index) {
+        if (rec.week === testRec.week) {
+          var sameRec = rec.recBlock === testRec.recBlock;
+          var newDouble = rec.recBlock === 'double';
+          var oldDouble = testRec.recBlock === 'double';
+          if (sameRec || newDouble || oldDouble) {
+            // Found the old assignment
+            // delete (splice) the rec from the camper's list
+            var removed = camper.recs.splice(index, 1)[0];
+            console.log('removed rec from camper: ' +
+                JSON.stringify(removed));
 
-              // Remove the camper from the rec's attendance list
-              // first retrieve the (old) rec
-              Rec.findOne({
-                name: removed.name,
-                week: removed.week,
-                recBlock: removed.recBlock
-              },
-              function(err, oldRec) {
+            // Remove the camper from the rec's attendance list
+            // first retrieve the (old) rec
+            Rec.findOne({
+              name: removed.name,
+              week: removed.week,
+              recBlock: removed.recBlock
+            },
+            function(err, oldRec) {
 
-                // find the camper
-                console.log('removed.people = ' +
-                    JSON.stringify(oldRec.people));
-                oldRec.people.forEach(function(person, index) {
-                  if (person.firstName === camper.name[0].firstName) {
-                    if (person.lastName === camper.name[0].lastName) {
-                      // found the camper. delete (splice) the camper
+              // find the camper
+              console.log('removed.people = ' +
+                  JSON.stringify(oldRec.people));
+              oldRec.people.forEach(function(person, index) {
+                if (person.firstName === camper.name[0].firstName) {
+                  if (person.lastName === camper.name[0].lastName) {
+                    // found the camper. delete (splice) the camper
 
-                      var removedCamper = oldRec.people.splice(index, 1)[0];
-                      console.log('about to remove this camper from the ' +
-                          'previously stated rec: ' +
-                          JSON.stringify(removedCamper));
+                    var removedCamper = oldRec.people.splice(index, 1)[0];
+                    console.log('about to remove this camper from the ' +
+                        'previously stated rec: ' +
+                        JSON.stringify(removedCamper));
 
-                      // save the modified rec (OK to happen asynchronously)
-                      oldRec.save(function(err) {
-                        if (err) { throw err; }
-                        console.log('succeeded in removing camper from rec');
-                        console.log('here\'s the saved rec: ' +
-                            JSON.stringify(this));
-                      });
-                    }
+                    // save the modified rec (OK to happen asynchronously)
+                    oldRec.save(function(err) {
+                      if (err) { throw err; }
+                      console.log('succeeded in removing camper from rec');
+                      console.log('here\'s the saved rec: ' +
+                          JSON.stringify(this));
+                    });
                   }
-                });
+                }
               });
-            }
+            });
           }
-        });
-
-        camper.recs.push(rec);
-        var underCapacity = validateCapacity(camper.recs);
-        console.log('underCapacity = ' + underCapacity);
-        if (!underCapacity && !assignment['override']) {
-          camper.recs.pop();
-          dealWithError('Rec Over Capacity', camper, rec, res);
-        }
-        else {
-
-          // update the rec
-          // do this before saving camper because camper has rec as a subdoc
-          rec.people.push(camper.name[0]);
-          console.log('after rec.people.push\ncamper = ' +
-              JSON.stringify(camper));
-
-          // save the camper
-          camper.save(function(err) {
-            if (err) {
-              if (err.name === 'ValidationError')
-              {
-                dealWithError(err.errors.recs.type, camper, rec, res);
-              }
-              else {
-                throw (err);
-              }
-            }
-            else {
-              console.log('saved camper');
-              console.log('camper = ' + JSON.stringify(camper));
-
-
-              // save the rec
-              rec.save(function(err) {
-                if (err) { throw err; }
-                console.log('saved rec');
-                console.log('camper = ' + JSON.stringify(camper));
-                // Call the assign page back
-                exports.assign(req, res);
-              });
-            }
-          });
         }
       });
+
+      camper.recs.push(rec);
+      var underCapacity = validateCapacity(camper.recs);
+      console.log('underCapacity = ' + underCapacity);
+      if (!underCapacity && !assignment['override']) {
+        camper.recs.pop();
+        dealWithError('Rec Over Capacity', camper, rec, res);
+      }
+      else {
+
+        // update the rec
+        // do this before saving camper because camper has rec as a subdoc
+        rec.people.push(camper.name[0]);
+        console.log('after rec.people.push\ncamper = ' +
+            JSON.stringify(camper));
+
+        // save the camper
+        camper.save(function(err) {
+          if (err) {
+            if (err.name === 'ValidationError')
+            {
+              dealWithError(err.errors.recs.type, camper, rec, res);
+            }
+            else {
+              throw (err);
+            }
+          }
+          else {
+            console.log('saved camper');
+            console.log('camper = ' + JSON.stringify(camper));
+
+
+            // save the rec
+            rec.save(function(err) {
+              if (err) { throw err; }
+              console.log('saved rec');
+              console.log('camper = ' + JSON.stringify(camper));
+              // Call the assign page back
+              exports.assign(req, res);
+            });
+          }
+        });
+      }
     });
+  });
 };
