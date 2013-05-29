@@ -71,9 +71,9 @@ $('document').ready(function() {
   for(recBlock in recs) {
     recs[recBlock].forEach( function(rec) {
       var element = '<div class="button rec ' + recBlock + '"';
-      element += ' id="' + rec.replace(' ', '-') + '"/>';
+      element += ' id="' + rec.replace(' ', '-') + '-' + recBlock + '"/>';
       $buttons.append(element);
-      var $button = $('#' + rec.replace(' ', '-'));
+      var $button = $('#' + rec.replace(' ', '-') + '-' + recBlock);
       $button.html(rec);
     });
   }
