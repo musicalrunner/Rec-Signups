@@ -1,1 +1,1 @@
-web: sudo npm cache clear; node app.js
+web: node app.js
